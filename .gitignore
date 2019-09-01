@@ -4,3 +4,4 @@ Icon?
 env
 .env
 *.swp
+*.pyc
