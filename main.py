@@ -51,14 +51,14 @@ def enrich_images_info_with_id(full_images_info, initial_images_map_with_image_n
         for image_info in full_images_info:
             if image_info['Name'] == initial_images_map_with_image_name[image_map]['image_name']:
                 initial_images_map_with_image_name[image_map]['image_id'] = image_info['ImageId']
-    return  initial_images_map_with_image_name
+    return initial_images_map_with_image_name
 
 def enrich_images_info_with_name(full_images_info, initial_images_map_with_image_id):
     for image_map in initial_images_map_with_image_id:
         for image_info in full_images_info:
             if image_info['ImageId'] == initial_images_map_with_image_id[image_map]['image_id']:
                 initial_images_map_with_image_id[image_map]['image_name'] = image_info['Name']
-    return  initial_images_map_with_image_id
+    return initial_images_map_with_image_id
 
 def get_images_ids_from_init_id_map(initial_images_map_with_image_id):
     return [initial_images_map_with_image_id[top_level_key]['image_id'] for top_level_key in initial_images_map_with_image_id]
