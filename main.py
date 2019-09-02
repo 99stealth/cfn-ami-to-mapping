@@ -82,9 +82,12 @@ def parse_images_names_from_info(images_info):
     return images_names
 
 def generate_map(images_names, top_level_keys, aws_regions):
+    images_map = {}
     for region in aws_regions:
         client = get_client('ec2', region)
-        print (region, client)
+        images_info = get_images_info_by_name(client, images_names)
+        images_ids = parse_images_ids_from_info(images_info)
+        print (region, images_ids)
 
 def main():
     args = parse_arguments()
