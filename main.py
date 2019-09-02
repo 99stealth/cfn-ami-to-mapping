@@ -16,6 +16,7 @@ def parse_arguments():
     ami_identifier_group = parser.add_mutually_exclusive_group(required=True)
     ami_identifier_group.add_argument('-i', '--image-id', action='append')
     ami_identifier_group.add_argument('-n', '--image-name', action='append')
+    parser.add_argument('-m', '--map-name', default="AMIRegionMap")
     parser.add_argument('-k', '--top-level-key', action='append', required=True)
     parser.add_argument('-r', '--region', action='store', default='us-east-1')                 # make default if it is in ~/.aws/config
 
@@ -112,7 +113,7 @@ def parse_images_names_from_info(images_info):
     return images_names
 
 
-def generate_map(initial_images_map, aws_regions):
+def generate_map(initial_images_map, aws_regions, map_name):
     images_map = {}
     images_names = get_images_names_from_init_name_map(initial_images_map)
     for region in aws_regions:
@@ -127,7 +128,7 @@ def generate_map(initial_images_map, aws_regions):
                     else:
                         region_image_map[region][image_map] = image_info['ImageId']
         images_map.update(region_image_map)
-    return images_map
+    return {map_name: images_map}
 
 
 def dictionary_to_json(images_map):
@@ -160,7 +161,7 @@ def main():
         images_names = get_images_names_from_init_name_map(initial_images_map_with_image_name)
         full_images_info = get_images_info_by_name(client, images_names)
         initial_images_map = enrich_images_info_with_id(full_images_info, initial_images_map_with_image_name)
-    images_map = generate_map(initial_images_map, aws_regions)
+    images_map = generate_map(initial_images_map, aws_regions, args.map_name)
     if args.json:
         print(dictionary_to_json(images_map))
     elif args.yaml:
