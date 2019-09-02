@@ -116,6 +116,7 @@ def parse_images_names_from_info(images_info):
 def generate_map(initial_images_map, aws_regions, map_name):
     images_map = {}
     images_names = get_images_names_from_init_name_map(initial_images_map)
+    print('[!] Generating mapping for you. Please, wait several seconds.')
     for region in aws_regions:
         region_image_map = {}
         client = get_client('ec2', region)
