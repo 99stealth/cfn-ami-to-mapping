@@ -12,7 +12,7 @@ def parse_arguments():
                                     epilog='')
     output_format_group = parser.add_mutually_exclusive_group(required=False)
     output_format_group.add_argument('-j', '--json', action="store_true")   # make default if it is in ~/.aws/config
-    output_format_group.add_argument('-y', '--yaml', action="store_true")   # make default if it is in ~/.aws/config
+    output_format_group.add_argument('-y', '--yaml', action="store_true", default=True)   # make default if it is in ~/.aws/config
     ami_identifier_group = parser.add_mutually_exclusive_group(required=True)
     ami_identifier_group.add_argument('-i', '--image-id', action='append')
     ami_identifier_group.add_argument('-n', '--image-name', action='append')
@@ -130,6 +130,14 @@ def generate_map(initial_images_map, aws_regions):
     return images_map
 
 
+def dictionary_to_json(images_map):
+    return json.dumps(images_map, indent=4, sort_keys=True)
+
+
+def dictionary_to_yaml(images_map):
+    return yaml.dump(images_map)
+
+
 def main():
     args = parse_arguments()
     client = get_client('ec2', args.region)
@@ -153,6 +161,10 @@ def main():
         full_images_info = get_images_info_by_name(client, images_names)
         initial_images_map = enrich_images_info_with_id(full_images_info, initial_images_map_with_image_name)
     images_map = generate_map(initial_images_map, aws_regions)
+    if args.json:
+        print(dictionary_to_json(images_map))
+    elif args.yaml:
+        print(dictionary_to_yaml(images_map))
 
 
 if __name__ == '__main__':
