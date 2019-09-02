@@ -2,6 +2,7 @@
 
 import argparse
 import boto3
+from botocore.exceptions import ClientError, ParamValidationError
 import json
 import yaml
 
@@ -30,27 +31,47 @@ def parse_arguments():
     return args
 
 def get_regions(client):
-    return [region['RegionName'] for region in client.describe_regions()['Regions']]
+    try:
+        return [region['RegionName'] for region in client.describe_regions()['Regions']]
+    except ClientError as e:
+        print ('Unexpected error: {}'.format(e))
+    except ParamValidationError as e:
+        print ('Parameter validation error: {}'.format(e))
 
 def get_client(resource, region):
-    return boto3.client(resource, region_name=region)
+    try:
+        return boto3.client(resource, region_name=region)
+    except ClientError as e:
+        print ('Unexpected error: {}'.format(e))
+    except ParamValidationError as e:
+        print ('Parameter validation error: {}'.format(e))
 
 def get_images_info_by_id(client, images_ids):
-    response = client.describe_images(ImageIds=images_ids)
-    return response['Images']
+    try:
+        response = client.describe_images(ImageIds=images_ids)
+        return response['Images']
+    except ClientError as e:
+        print ('Unexpected error: {}'.format(e))
+    except ParamValidationError as e:
+        print ('Parameter validation error: {}'.format(e))
 
 def get_images_info_by_name(client, images_names):
-    response = client.describe_images(Filters=[
-        {
-            'Name': 'Name',
-            'Values': images_names
-        },
-        {
-            'Name': 'state',
-            'Values': [ 'available' ]
-        }
-    ],)
-    return response['Images']
+    try:
+        response = client.describe_images(Filters=[
+            {
+                'Name': 'name',
+                'Values': images_names
+            },
+            {
+                'Name': 'state',
+                'Values': [ 'available' ]
+            }
+        ],)
+        return response['Images']
+    except ClientError as e:
+        print ('Unexpected error: {}'.format(e))
+    except ParamValidationError as e:
+        print ('Parameter validation error: {}'.format(e))
 
 def parse_images_ids_from_info(images_info):
     images_ids = [ images['ImageId'] for images in images_info ]
