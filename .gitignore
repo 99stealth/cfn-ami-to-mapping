@@ -5,3 +5,4 @@ env
 .env
 *.swp
 *.pyc
+test_cases.sh
