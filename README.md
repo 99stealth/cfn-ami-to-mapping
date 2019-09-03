@@ -4,6 +4,14 @@ In most cases people use Mapping section in CloudFormation in order to associate
 
 I know how is it annoying to manually searching for AMI IDs in different AWS regions and build that map by your own, especially if your map is bigger than one image per region. That's why this tool had been created.
 
+
+## How to install
+- Clone this repository
+- Just run the command
+```
+make install
+```
+
 ## How to use
 ### Single image
 #### The scenario
