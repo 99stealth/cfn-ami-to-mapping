@@ -55,9 +55,6 @@ AMIRegionMap:
   us-west-2:
     AMILinux: ami-0f2176987ee50226e
 ```
-#### :warning: Please, pay attention
-- You may not specify a region in this case it will use default one which is `us-east-1`. Therefore you need to specify AMI ID of image from `us-east-1`.
-- By the default utility creates output using `yaml` format. If you want to change it to `json`, then run the utility with `--json` flag.
 
 ### Several images
 Ok, but there are cases when you should specify several images and use them `Fn::FindInMap` them based on some input `Parameter` or maybe something else.
@@ -120,6 +117,10 @@ AMIRegionMap:
     AMILinux: ami-0f2176987ee50226e
     AMILinux2: ami-082b5a644766e0e6f
 ```
+
+#### :warning: Please, pay attention
+- You may not specify a region in this case it will use default one which is `us-east-1`. Therefore you need to specify AMI ID of image from `us-east-1`.
+- By the default utility creates output using `yaml` format. If you want to change it to `json`, then run the utility with `--json` flag.
 ```
 cfn-ami-to-mapping --image-id ami-02f706d959cedf892 --top-level-key AMIID --us-east-2 --json
 ```
