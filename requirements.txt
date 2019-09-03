@@ -1,4 +1,4 @@
 argparse
 boto3
-json
+pyjson
 pyyaml
