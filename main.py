@@ -149,7 +149,7 @@ def parse_images_names_from_info(images_info):
 
 
 def generate_map(initial_images_map, aws_regions, map_name):
-    ''' Function reсeives initial images map, goes with their names across all
+    ''' Function receives initial images map, then goes withtheir names across all
      AWS regions and getting their ids. Function returns map with images per 
      region '''
 
