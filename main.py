@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import argparse
+import re
 import boto3
 from botocore.exceptions import ClientError, ParamValidationError
 import json
@@ -46,6 +47,13 @@ def get_regions(client):
     except ParamValidationError as e:
         print('Parameter validation error: {}'.format(e))
 
+
+def validate_the_image(images_ids):
+    for image_id in images_ids:
+        image_is_valid = re.match('^ami-(([a-f0-9]{8}$)|([a-f0-9]{17}$))', image_id)
+        if not image_is_valid:
+            return False, image_id
+    return True, None
 
 def get_client(resource, region):
     ''' Function provides AWS client for resource in region which were passed 
@@ -175,11 +183,15 @@ def dictionary_to_yaml(images_map):
 
 def main():
     ''' Main fucntion provides communication between all other functions '''
-    
+
     args = parse_arguments()
     client = get_client('ec2', args.region)
     aws_regions = get_regions(client)
     if args.image_id:
+        images_are_valid, incorect_image_id = validate_the_image(args.image_id)
+        if not images_are_valid:
+            print("[-] Invalid image id {}".format(incorect_image_id))
+            exit(1)
         initial_images_map_with_image_id = {}
         iter = 0
         for top_level_key in args.top_level_key:
