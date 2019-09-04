@@ -11,14 +11,14 @@ def parse_arguments():
     parser = argparse.ArgumentParser(description='Create mapping for CloudFormation with AMIs by region',
                                     epilog='')
     output_format_group = parser.add_mutually_exclusive_group(required=False)
-    output_format_group.add_argument('-j', '--json', action="store_true")   # make default if it is in ~/.aws/config
-    output_format_group.add_argument('-y', '--yaml', action="store_true", default=True)   # make default if it is in ~/.aws/config
+    output_format_group.add_argument('-j', '--json', action="store_true")
+    output_format_group.add_argument('-y', '--yaml', action="store_true", default=True)
     ami_identifier_group = parser.add_mutually_exclusive_group(required=True)
     ami_identifier_group.add_argument('-i', '--image-id', action='append')
     ami_identifier_group.add_argument('-n', '--image-name', action='append')
     parser.add_argument('-m', '--map-name', default="AMIRegionMap")
     parser.add_argument('-k', '--top-level-key', action='append', required=True)
-    parser.add_argument('-r', '--region', action='store', default='us-east-1')                 # make default if it is in ~/.aws/config
+    parser.add_argument('-r', '--region', action='store', default='us-east-1')
 
     args = parser.parse_args()
 
