@@ -8,6 +8,9 @@ import yaml
 
 
 def parse_arguments():
+    ''' Function allows to parse arguments from the line input and check if all
+    of them are entered correctly '''
+
     parser = argparse.ArgumentParser(description='Create mapping for CloudFormation with AMIs by region',
                                     epilog='')
     output_format_group = parser.add_mutually_exclusive_group(required=False)
@@ -33,6 +36,9 @@ def parse_arguments():
 
 
 def get_regions(client):
+    ''' Function provides list of regions which are available for current 
+    account '''
+
     try:
         return [region['RegionName'] for region in client.describe_regions()['Regions']]
     except ClientError as e:
@@ -42,6 +48,9 @@ def get_regions(client):
 
 
 def get_client(resource, region):
+    ''' Function provides AWS client for resource in region which were passed 
+    to the function '''
+
     try:
         return boto3.client(resource, region_name=region)
     except ClientError as e:
@@ -51,6 +60,8 @@ def get_client(resource, region):
 
 
 def enrich_images_info_with_id(full_images_info, initial_images_map_with_image_name):
+    ''' Function enriches image info by its id and returns a result back '''
+
     for image_map in initial_images_map_with_image_name:
         for image_info in full_images_info:
             if image_info['Name'] == initial_images_map_with_image_name[image_map]['image_name']:
@@ -59,6 +70,8 @@ def enrich_images_info_with_id(full_images_info, initial_images_map_with_image_n
 
 
 def enrich_images_info_with_name(full_images_info, initial_images_map_with_image_id):
+    ''' Function enriches image info by its name and returns a result back '''
+
     for image_map in initial_images_map_with_image_id:
         for image_info in full_images_info:
             if image_info['ImageId'] == initial_images_map_with_image_id[image_map]['image_id']:
@@ -67,14 +80,22 @@ def enrich_images_info_with_name(full_images_info, initial_images_map_with_image
 
 
 def get_images_ids_from_init_id_map(initial_images_map_with_image_id):
+    ''' Function receives initial map and returns all images ids from the 
+    received map '''
+
     return [initial_images_map_with_image_id[top_level_key]['image_id'] for top_level_key in initial_images_map_with_image_id]
 
 
 def get_images_names_from_init_name_map(initial_images_map_with_image_name):
+    ''' Function receives initial map and returns all images names from the 
+    received map '''
+
     return [initial_images_map_with_image_name[top_level_key]['image_name'] for top_level_key in initial_images_map_with_image_name]
 
 
 def get_images_info_by_id(client, images_ids):
+    ''' Function receives images ids and returns all the related data '''
+
     try:
         response = client.describe_images(ImageIds=images_ids)
         return response['Images']
@@ -85,6 +106,8 @@ def get_images_info_by_id(client, images_ids):
 
 
 def get_images_info_by_name(client, images_names):
+    ''' Function receives images names and returns all the related data '''
+
     try:
         response = client.describe_images(Filters=[
             {
@@ -104,16 +127,24 @@ def get_images_info_by_name(client, images_names):
 
 
 def parse_images_ids_from_info(images_info):
+    ''' Function receives full images data and returns only images ids '''
+
     images_ids = [ images['ImageId'] for images in images_info ]
     return images_ids
 
 
 def parse_images_names_from_info(images_info):
+    ''' Function receives full images data and returns only images names '''
+
     images_names = [ images['Name'] for images in images_info ]
     return images_names
 
 
 def generate_map(initial_images_map, aws_regions, map_name):
+    ''' Function reсeives initial images map, goes with their names across all
+     AWS regions and getting their ids. Function returns map with images per 
+     region '''
+
     images_map = {}
     images_names = get_images_names_from_init_name_map(initial_images_map)
     print('[!] Generating mapping for you. Please, wait several seconds.')
@@ -133,14 +164,18 @@ def generate_map(initial_images_map, aws_regions, map_name):
 
 
 def dictionary_to_json(images_map):
+    ''' Function receives images map and transforms it ro json '''
     return json.dumps(images_map, indent=4, sort_keys=True)
 
 
 def dictionary_to_yaml(images_map):
+    ''' Function receives images map and transforms it ro yaml '''
     return yaml.dump(images_map)
 
 
 def main():
+    ''' Main fucntion provides communication between all other functions '''
+    
     args = parse_arguments()
     client = get_client('ec2', args.region)
     aws_regions = get_regions(client)
