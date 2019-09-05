@@ -5,4 +5,5 @@ env
 .env
 *.swp
 *.pyc
+__pycache__
 test_cases.sh
