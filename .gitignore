@@ -7,3 +7,4 @@ env
 *.pyc
 __pycache__
 test_cases.sh
+timeit.py
