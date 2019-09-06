@@ -23,6 +23,7 @@ def parse_arguments():
     parser.add_argument('-m', '--map-name', default="AMIRegionMap")
     parser.add_argument('-k', '--top-level-key', action='append', required=True)
     parser.add_argument('-r', '--region', action='store', default='us-east-1')
+    parser.add_argument('-q', '--quiet', action='store_true', default=False)
 
     args = parser.parse_args()
 
@@ -54,6 +55,7 @@ def validate_the_image(images_ids):
         if not image_is_valid:
             return False, image_id
     return True, None
+
 
 def get_client(resource, region):
     ''' Function provides AWS client for resource in region which were passed 
@@ -101,9 +103,11 @@ def get_images_names_from_init_name_map(initial_images_map_with_image_name):
     return [initial_images_map_with_image_name[top_level_key]['image_name'] for top_level_key in initial_images_map_with_image_name]
 
 
-def get_images_info_by_id(client, images_ids):
+def get_images_info_by_id(client, images_ids, quiet_mode):
     ''' Function receives images ids and returns all the related data '''
 
+    if not quiet_mode:
+        print('[!] Getting full info about image(s) {} in {}'.format(' '.join(images_ids), client.meta.region_name))
     try:
         response = client.describe_images(ImageIds=images_ids)
         return response['Images']
@@ -113,9 +117,11 @@ def get_images_info_by_id(client, images_ids):
         print('Parameter validation error: {}'.format(e))
 
 
-def get_images_info_by_name(client, images_names):
+def get_images_info_by_name(client, images_names, quiet_mode):
     ''' Function receives images names and returns all the related data '''
 
+    if not quiet_mode:
+        print('[!] Getting full info about image {} in {}'.format(' '.join(images_names), client.meta.region_name))
     try:
         response = client.describe_images(Filters=[
             {
@@ -148,18 +154,19 @@ def parse_images_names_from_info(images_info):
     return images_names
 
 
-def generate_map(initial_images_map, aws_regions, map_name):
+def generate_map(initial_images_map, aws_regions, map_name, quiet_mode):
     ''' Function receives initial images map, then goes withtheir names across all
      AWS regions and getting their ids. Function returns map with images per 
      region '''
 
     images_map = {}
     images_names = get_images_names_from_init_name_map(initial_images_map)
-    print('[!] Generating mapping for you. Please, wait several seconds.')
+    if not quiet_mode:
+        print('[!] Generating mapping for you. Please, wait several seconds.')
     for region in aws_regions:
         region_image_map = {}
         client = get_client('ec2', region)
-        full_images_info = get_images_info_by_name(client, images_names)
+        full_images_info = get_images_info_by_name(client, images_names, quiet_mode)
         for image_map in initial_images_map:
             for image_info in full_images_info:
                 if initial_images_map[image_map]['image_name'] == image_info['Name']:
@@ -198,7 +205,7 @@ def main():
             initial_images_map_with_image_id[top_level_key] = { "image_id": args.image_id[iter] }
             iter = iter + 1
         images_ids = get_images_ids_from_init_id_map(initial_images_map_with_image_id)
-        full_images_info = get_images_info_by_id(client, images_ids)
+        full_images_info = get_images_info_by_id(client, images_ids, args.quiet)
         initial_images_map = enrich_images_info_with_name(full_images_info, initial_images_map_with_image_id)
     elif args.image_name:
         initial_images_map_with_image_name = {}
@@ -207,9 +214,9 @@ def main():
             initial_images_map_with_image_name[top_level_key] = { "image_name": args.image_name[iter] }
             iter = iter + 1
         images_names = get_images_names_from_init_name_map(initial_images_map_with_image_name)
-        full_images_info = get_images_info_by_name(client, images_names)
+        full_images_info = get_images_info_by_name(client, images_names, args.quiet)
         initial_images_map = enrich_images_info_with_id(full_images_info, initial_images_map_with_image_name)
-    images_map = generate_map(initial_images_map, aws_regions, args.map_name)
+    images_map = generate_map(initial_images_map, aws_regions, args.map_name, args.quiet)
     if args.json:
         print(dictionary_to_json(images_map))
     elif args.yaml:
