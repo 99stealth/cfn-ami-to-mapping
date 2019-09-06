@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Regex which allows to check that AMI ID has been correctly passed
 
-## < 0.5.0 
+## [ 0.0.0 - 0.5.0] - 2019-08-29 - 2019-09-02
 ### Added
 There was active development here. All the basic functionallity had been developed here.
 I think the utility is ready to use but there should be added a lot of improvements. So, I swear I'll do. 
