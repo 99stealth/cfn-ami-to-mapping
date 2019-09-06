@@ -10,7 +10,7 @@ I know how is it annoying to manually searching for AMI IDs in different AWS reg
 ```
 make install
 ```
-
+> :warning: It doesn't work perfectly, so please report `Issues` if you faced with any problem during the installation. 
 ## How to use
 
 ### Long story short
