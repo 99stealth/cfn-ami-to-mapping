@@ -71,7 +71,7 @@ AMIRegionMap:
 ### Several images
 Ok, but there are cases when you should specify several images and  `Fn::FindInMap` them based on some input `Parameter` or maybe something else.
 #### The scenario
-You need to have posibility to swap your infrastructure from `Amazon Linux` to `Amazon Linux 2`.
+You need to have possibility to swap your infrastructure from `Amazon Linux` to `Amazon Linux 2`.
 
 Ok, then try to specify several values:
 ```
