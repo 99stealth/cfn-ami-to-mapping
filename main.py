@@ -26,12 +26,12 @@ def parse_arguments():
     parser.add_argument('-k', '--top-level-key', action='append', required=True)
     parser.add_argument('-r', '--region', action='store', default='us-east-1')
     parser.add_argument('-q', '--quiet', action='store_true', default=False)
-    parser.add_argument('--version', action='version', version='%(prog)s 0.5.2')
+    parser.add_argument('--version', action='version', version='%(prog)s 0.5.3')
 
     args = parser.parse_args()
 
     if args.aws_access_key_id and args.aws_secret_access_key:
-        print("[!] You have provided your aws_access_key_id and aws_secret_access_key inline which is insecure. Use \033[1maws configure\033[0m command to configure you")
+        print("[!] You have provided your aws_access_key_id and aws_secret_access_key inline which is insecure. Use \033[1maws configure\033[0m command to configure your ")
     elif args.aws_access_key_id and not args.aws_secret_access_key:
         parser.error("Parameter --aws-access-key-id requires --aws-secret-access-key")
     elif not args.aws_access_key_id and args.aws_secret_access_key:
