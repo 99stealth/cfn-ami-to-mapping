@@ -20,13 +20,23 @@ def parse_arguments():
     ami_identifier_group = parser.add_mutually_exclusive_group(required=True)
     ami_identifier_group.add_argument('-i', '--image-id', action='append')
     ami_identifier_group.add_argument('-n', '--image-name', action='append')
+    parser.add_argument('--aws-access-key-id', action='store')
+    parser.add_argument('--aws-secret-access-key', action='store')
     parser.add_argument('-m', '--map-name', default="AMIRegionMap")
     parser.add_argument('-k', '--top-level-key', action='append', required=True)
     parser.add_argument('-r', '--region', action='store', default='us-east-1')
     parser.add_argument('-q', '--quiet', action='store_true', default=False)
-    parser.add_argument('--version', action='version', version='%(prog)s 0.5.2')
+    parser.add_argument('--version', action='version', version='%(prog)s 0.5.3')
 
     args = parser.parse_args()
+
+    if args.aws_access_key_id and args.aws_secret_access_key:
+        print("[!] You have provided your aws_access_key_id and aws_secret_access_key inline which is insecure. Use \033[1maws configure\033[0m command to configure your ")
+    elif args.aws_access_key_id and not args.aws_secret_access_key:
+        parser.error("Parameter --aws-access-key-id requires --aws-secret-access-key")
+    elif not args.aws_access_key_id and args.aws_secret_access_key:
+        parser.error("Parameter --aws-secret-access-key requires --aws-access-key-id")
+
 
     if args.image_id:
         if len(args.image_id) != len(args.top_level_key):
@@ -58,12 +68,15 @@ def validate_the_image(images_ids):
     return True, None
 
 
-def get_client(resource, region):
+def get_client(resource, region, aws_access_key_id, aws_secret_access_key):
     ''' Function provides AWS client for resource in region which were passed 
     to the function '''
 
     try:
-        return boto3.client(resource, region_name=region)
+        if aws_access_key_id and aws_secret_access_key:
+            return boto3.client(resource, region_name=region, aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key)
+        else:
+            return boto3.client(resource, region_name=region)
     except ClientError as e:
         print('Unexpected error: {}'.format(e))
     except ParamValidationError as e:
@@ -155,7 +168,7 @@ def parse_images_names_from_info(images_info):
     return images_names
 
 
-def generate_map(initial_images_map, aws_regions, map_name, quiet_mode):
+def generate_map(initial_images_map, aws_regions, map_name, quiet_mode, aws_access_key_id, aws_secret_access_key):
     ''' Function receives initial images map, then goes withtheir names across all
      AWS regions and getting their ids. Function returns map with images per 
      region '''
@@ -166,7 +179,7 @@ def generate_map(initial_images_map, aws_regions, map_name, quiet_mode):
         print('[!] Generating mapping for you. Please, wait several seconds.')
     for region in aws_regions:
         region_image_map = {}
-        client = get_client('ec2', region)
+        client = get_client('ec2', region, aws_access_key_id, aws_secret_access_key)
         full_images_info = get_images_info_by_name(client, images_names, quiet_mode)
         for image_map in initial_images_map:
             for image_info in full_images_info:
@@ -193,7 +206,7 @@ def main():
     ''' Main fucntion provides communication between all other functions '''
 
     args = parse_arguments()
-    client = get_client('ec2', args.region)
+    client = get_client('ec2', args.region, args.aws_access_key_id, args.aws_secret_access_key)
     aws_regions = get_regions(client)
     if args.image_id:
         images_are_valid, incorect_image_id = validate_the_image(args.image_id)
@@ -217,7 +230,7 @@ def main():
         images_names = get_images_names_from_init_name_map(initial_images_map_with_image_name)
         full_images_info = get_images_info_by_name(client, images_names, args.quiet)
         initial_images_map = enrich_images_info_with_id(full_images_info, initial_images_map_with_image_name)
-    images_map = generate_map(initial_images_map, aws_regions, args.map_name, args.quiet)
+    images_map = generate_map(initial_images_map, aws_regions, args.map_name, args.quiet, args.aws_access_key_id, args.aws_secret_access_key)
     if args.json:
         print(dictionary_to_json(images_map))
     elif args.yaml:
