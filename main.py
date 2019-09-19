@@ -26,7 +26,7 @@ def parse_arguments():
     parser.add_argument('-k', '--top-level-key', action='append', required=True)
     parser.add_argument('-r', '--region', action='store', default='us-east-1')
     parser.add_argument('-q', '--quiet', action='store_true', default=False)
-    parser.add_argument('--version', action='version', version='%(prog)s 0.5.3')
+    parser.add_argument('--version', action='version', version='%(prog)s 0.5.4')
 
     args = parser.parse_args()
 
@@ -238,4 +238,7 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except (KeyboardInterrupt, SystemExit):
+        print("[-] Processing has been stopped. Interrupted by user")
