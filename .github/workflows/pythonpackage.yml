@@ -28,3 +28,14 @@ jobs:
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+    - name: Smoke tests
+      run: |
+        echo "----------- Testing with image names ------------------"
+        python main.py -n amzn-ami-hvm-2018.03.0.20190611-x86_64-gp2 -k AMILinux -n amzn2-ami-hvm-2.0.20190618-x86_64-gp2 -k AMILinux2 --aws-access-key-id=${AWS_ACCESS_KEY_ID} --aws-secret-access-key=${AWS_SECRET_ACCESS_KEY} -q
+        echo "-------------------------------------------------------"
+        echo "------------ Testing with image ids -------------------"
+        python main.py -i ami-035b3c7efe6d061d5 -k AMILinux -i ami-0b898040803850657 -k AMILinux2 --aws-access-key-id=${AWS_ACCESS_KEY_ID} --aws-secret-access-key=${AWS_SECRET_ACCESS_KEY} -q
+        echo "-------------------------------------------------------"
+        echo "---------- Testing with invalid image ids -------------"
+        python main.py -i ami-xxx -k AMILinux -i ami-yyy -k AMILinux2 --aws-access-key-id=${AWS_ACCESS_KEY_ID} --aws-secret-access-key=${AWS_SECRET_ACCESS_KEY} -q
+        echo "-------------------------------------------------------"
