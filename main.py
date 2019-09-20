@@ -30,7 +30,7 @@ def parse_arguments():
 
     args = parser.parse_args()
 
-    if args.aws_access_key_id and args.aws_secret_access_key:
+    if args.aws_access_key_id and args.aws_secret_access_key and not args.quiet:
         print("[!] You have provided your aws_access_key_id and aws_secret_access_key inline which is insecure. Use \033[1maws configure\033[0m command to configure your ")
     elif args.aws_access_key_id and not args.aws_secret_access_key:
         parser.error("Parameter --aws-access-key-id requires --aws-secret-access-key")
@@ -240,5 +240,6 @@ def main():
 if __name__ == '__main__':
     try:
         main()
-    except (KeyboardInterrupt, SystemExit):
+    except (KeyboardInterrupt):
         print("[-] Processing has been stopped. Interrupted by user")
+        exit(1)
