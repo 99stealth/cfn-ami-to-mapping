@@ -1,5 +1,7 @@
 # Get AMI IDs per region automatically for your CloudFormation template
 
+[![Actions Status](https://github.com/{owner}/{repo}/workflows/{workflow_name}/badge.svg)](https://github.com/{owner}/{repo}/actions)
+
 In most cases people use Mapping section in CloudFormation in order to associate AMI IDs with AWS regions as it described [THIS](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-findinmap.html) example.
 
 I know how is it annoying to manually searching for AMI IDs in different AWS regions and build that map by your own, especially if your map is bigger than one image per region. That's why this tool had been created.
