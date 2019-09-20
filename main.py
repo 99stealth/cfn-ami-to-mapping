@@ -240,5 +240,6 @@ def main():
 if __name__ == '__main__':
     try:
         main()
-    except (KeyboardInterrupt, SystemExit):
+    except (KeyboardInterrupt):
         print("[-] Processing has been stopped. Interrupted by user")
+        exit(1)
