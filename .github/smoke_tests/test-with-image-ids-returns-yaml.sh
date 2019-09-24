@@ -2,7 +2,8 @@
 
 echo "------------------- Testing with image ids -------------------"
 
-python main.py -i ami-xxx -k AMILinux -i ami-yyy -k AMILinux2 -q
+python main.py -i ami-035b3c7efe6d061d5 -k AMILinux -i ami-0b898040803850657 -k AMILinux2 --aws-access-key-id=${AWS_ACCESS_KEY_ID} --aws-secret-access-key=${AWS_SECRET_ACCESS_KEY} -q
+
 if [ $? != 0 ]; then 
     echo "[+] Test Passed"
 else
