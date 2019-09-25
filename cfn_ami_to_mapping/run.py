@@ -23,7 +23,7 @@ def parse_arguments():
     parser.add_argument('-k', '--top-level-key', action='append', required=True)
     parser.add_argument('-r', '--region', action='store', default='us-east-1')
     parser.add_argument('-q', '--quiet', action='store_true', default=False)
-    parser.add_argument('--version', action='version', version='%(prog)s 0.5.4')
+    parser.add_argument('--version', action='version', version='%(prog)s {version}'.format(version='0.6.0'))
 
     args = parser.parse_args()
 
