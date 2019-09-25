@@ -1,20 +1,19 @@
-from cfn_ami_to_mapping.get import Get
+from cfn_ami_to_mapping import Get
 
 class Generate:
-    get_handler = Get
     def cfn_ami_mapping_section(self, initial_images_map, aws_regions, map_name, quiet_mode, aws_access_key_id, aws_secret_access_key):
         ''' Function receives initial images map, then goes withtheir names across all
          AWS regions and getting their ids. Function returns map with images per 
          region '''
-
+        cfn_ami_to_mapping_get = Get()
         images_map = {}
-        images_names = self.get_handler.images_names_from_init_name_map(initial_images_map)
+        images_names = cfn_ami_to_mapping_get.images_names_from_init_name_map(initial_images_map)
         if not quiet_mode:
             print('[!] Generating mapping for you. Please, wait several seconds.')
         for region in aws_regions:
             region_image_map = {}
-            client = self.get_handler.aws_client('ec2', region, aws_access_key_id, aws_secret_access_key)
-            full_images_info = self.get_handler.images_info_by_name(client, images_names, quiet_mode)
+            client = cfn_ami_to_mapping_get.aws_client('ec2', region, aws_access_key_id, aws_secret_access_key)
+            full_images_info = cfn_ami_to_mapping_get.images_info_by_name(client, images_names, quiet_mode)
             for image_map in initial_images_map:
                 for image_info in full_images_info:
                     if initial_images_map[image_map]['image_name'] == image_info['Name']:

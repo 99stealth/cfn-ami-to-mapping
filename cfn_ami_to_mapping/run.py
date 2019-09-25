@@ -1,9 +1,9 @@
 import argparse
-from cfn_ami_to_mapping.get import Get
-from cfn_ami_to_mapping.validate import Validate
-from cfn_ami_to_mapping.enrich import Enrich
-from cfn_ami_to_mapping.generate import Generate
-from cfn_ami_to_mapping.transform import Transform
+from cfn_ami_to_mapping import Get
+from cfn_ami_to_mapping import Validate
+from cfn_ami_to_mapping import Enrich
+from cfn_ami_to_mapping import Generate
+from cfn_ami_to_mapping import Transform
 
 def parse_arguments():
     ''' Function allows to parse arguments from the line input and check if all
@@ -46,11 +46,17 @@ def parse_arguments():
 
 def main():
     ''' Main fucntion provides communication between all other functions '''
+    cfn_ami_to_mapping_get = Get()
+    cfn_ami_to_mapping_validate = Validate()
+    cfn_ami_to_mapping_enrich = Enrich()
+    cfn_ami_to_mapping_generate = Generate()
+    cfn_ami_to_mapping_transform = Transform()
+
     args = parse_arguments()
-    client = Get.aws_client('ec2', args.region, args.aws_access_key_id, args.aws_secret_access_key)
-    aws_regions = Get.aws_regions(client)
+    client = cfn_ami_to_mapping_get.aws_client('ec2', args.region, args.aws_access_key_id, args.aws_secret_access_key)
+    aws_regions = cfn_ami_to_mapping_get.aws_regions(client)
     if args.image_id:
-        images_are_valid, incorrect_image_id = Validate.images_ids(args.image_id)
+        images_are_valid, incorrect_image_id = cfn_ami_to_mapping_validate.images_ids(args.image_id)
         if not images_are_valid:
             print("[-] Invalid image id {}".format(incorrect_image_id))
             exit(1)
@@ -59,19 +65,19 @@ def main():
         for top_level_key in args.top_level_key:
             initial_images_map_with_image_id[top_level_key] = { "image_id": args.image_id[iter] }
             iter = iter + 1
-        images_ids = Get.images_ids_from_init_id_map(initial_images_map_with_image_id)
-        full_images_info = Get.images_info_by_id(client, images_ids, args.quiet)
-        initial_images_map = Enrich.images_info_with_name(full_images_info, initial_images_map_with_image_id)
+        images_ids = cfn_ami_to_mapping_get.images_ids_from_init_id_map(initial_images_map_with_image_id)
+        full_images_info = cfn_ami_to_mapping_get.images_info_by_id(client, images_ids, args.quiet)
+        initial_images_map = cfn_ami_to_mapping_enrich.images_info_with_name(full_images_info, initial_images_map_with_image_id)
     elif args.image_name:
         initial_images_map_with_image_name = {}
         iter = 0
         for top_level_key in args.top_level_key:
             initial_images_map_with_image_name[top_level_key] = { "image_name": args.image_name[iter] }
             iter = iter + 1
-        images_names = Get.images_names_from_init_name_map(initial_images_map_with_image_name)
-        full_images_info = Get.images_info_by_name(client, images_names, args.quiet)
-        initial_images_map = Enrich.images_info_with_id(full_images_info, initial_images_map_with_image_name)
-    images_map = Generate.cfn_ami_mapping_section(initial_images_map, aws_regions, args.map_name, args.quiet, args.aws_access_key_id, args.aws_secret_access_key)
+        images_names = cfn_ami_to_mapping_get.images_names_from_init_name_map(initial_images_map_with_image_name)
+        full_images_info = cfn_ami_to_mapping_get.images_info_by_name(client, images_names, args.quiet)
+        initial_images_map = cfn_ami_to_mapping_enrich.images_info_with_id(full_images_info, initial_images_map_with_image_name)
+    images_map = cfn_ami_to_mapping_generate.cfn_ami_mapping_section(initial_images_map, aws_regions, args.map_name, args.quiet, args.aws_access_key_id, args.aws_secret_access_key)
     if args.json:
         print(Transform.dictionary_to_json(images_map))
     elif args.yaml:
