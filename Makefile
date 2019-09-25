@@ -1,14 +1,20 @@
 
-install: install-dependencies
+install: build
 	@echo "Installing cfn-ami-to-mapping"
-	@cp main.py /usr/local/bin/cfn-ami-to-mapping && chmod +x /usr/local/bin/cfn-ami-to-mapping && echo "✅ Utility has been successfully installed" || echo "❌ Something went wrong and we could not fix that automatically"
+	@pip install dist/cfn-ami-to-mapping-*
 
-install-dependencies:
-	@echo "Installing required dependencies"
-	@pip install -r requirements.txt > /dev/null && echo "✅ Dependencies packages successfully installed" || echo "❌ Something went wrong and we could not fix that automatically"
+remove:
+	@echo "Uninstalling cfn-ami-to-mapping"
+	@pip uninstall cfn-ami-to-mapping -y
 
-update: clean install
+update: remove install
+
+build:
+	@echo "Building the package"
+	@python3 setup.py sdist
 
 clean:
-	@echo "Uninstalling an utility"
-	rm -f /usr/local/bin/cfn-ami-to-mapping
+	@echo "Removing build"
+	rm -Rf dist/ *.egg-info/
+
+rebuild: clean build
