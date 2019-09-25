@@ -8,6 +8,7 @@ if [ $? == 0 ]; then
     echo "[+] Test Passed"
 else
     echo "[-] Test Failed"
+    exit 1
 fi
 
 echo "--------------------------------------------------------------"
