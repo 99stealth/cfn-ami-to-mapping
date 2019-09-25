@@ -23,6 +23,3 @@ class Generate:
                             region_image_map[region][image_map] = image_info['ImageId']
             images_map.update(region_image_map)
         return {map_name: images_map}
-
-
-    
