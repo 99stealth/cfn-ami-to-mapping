@@ -6,5 +6,5 @@ env
 *.swp
 *.pyc
 __pycache__
-dist/*
+dist/**
 *.egg-info
