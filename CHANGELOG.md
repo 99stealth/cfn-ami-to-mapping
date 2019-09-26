@@ -18,6 +18,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `test_cases.sh` and `timeit.py` from `.gitignore` as now 1-st is a part of CI and 2-nd is a part of the new structure
 - `install`, `install-dependencies` from `Makefile` since this is not needed for the installation process
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 5379a1d432e902ecdc2679cc3bf6ad71ee1ab57c
 ## [0.5.4] - 2019-09-20
 ### Added
 - Key interruption exception

@@ -1,6 +1,8 @@
 # Get AMI IDs per region automatically for your CloudFormation template
 
 [![Actions Status](https://github.com/99stealth/cfn-ami-to-mapping/workflows/main/badge.svg)](https://github.com/99stealth/cfn-ami-to-mapping/actions)
+![GitHub License](https://img.shields.io/github/license/99stealth/cfn-ami-to-mapping)
+![Commit Activity](https://img.shields.io/github/commit-activity/w/99stealth/cfn-ami-to-mapping)
 
 In most cases people use Mapping section in CloudFormation in order to associate AMI IDs with AWS regions as it described [THIS](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-findinmap.html) example.
 
