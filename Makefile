@@ -15,6 +15,6 @@ build:
 
 clean:
 	@echo "Removing build"
-	rm -Rf dist/ *.egg-info/
+	@rm -Rf dist/ *.egg-info/
 
 rebuild: clean build
