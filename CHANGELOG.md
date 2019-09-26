@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.0] - 2019-09-26
+### Added
+- `setup.py` in order to create packages
+- Module `helper` with method `timeit` which allows to measure methods' execution time 
+### Changed
+- Package structure. Istead of one `main.py` was created structure based on best python practices. Now there are several python classes and one `run.py` file which calls them
+- Makefile which now allows to build the package and install it on the system
+- `.gitignore` which now ignores everithing in `dist` directory and all `egg-info` directories
+- Smoke tests in order to correspond to new dirrectory structure
+### Removed
+- `main.py` since it was changed by the new structured code design
+- `test_cases.sh` and `timeit.py` from `.gitignore` as now 1-st is a part of CI and 2-nd is a part of the new structure
+- `install`, `install-dependencies` from `Makefile` since this is not needed for installation process
+
+
 ## [0.5.4] - 2019-09-20
 ### Added
 - Key interruption exception
