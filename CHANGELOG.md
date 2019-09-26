@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.5.2] - 2019-09-10
 ### Added
-- Information about utulitie's version
+- Information about utility's version
 
 ## [0.5.1] - 2019-09-06
 ### Added
@@ -23,15 +23,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.5.0] - 2019-09-04
 ### Added
-- Regex which allows to check that AMI ID has been correctly passed
+- Regex which allows checking that AMI ID has been correctly passed
 
 ## [ 0.0.0 - 0.5.0] - 2019-08-29 - 2019-09-02
 ### Added
-There was active development here. All the basic functionallity had been developed here.
+There was active development here. All the basic functionality had been developed here.
 I think the utility is ready to use but there should be added a lot of improvements. So, I swear I'll do. 
 ### Changed
-When I thought it's ready I decided to double check and test it, and you know what? I found one critical bug so I decided to rewrite main logic. Now it works nicely
+When I thought it's ready I decided to double-check and test it, and you know what? I found one critical bug so I decided to rewrite the main logic. Now it works nicely
 ### Fixed
-Also fixed a buch
+Also, fixed a bunch
 ### Removed
 There was some shitty stuff, but I don't really remember what and where :)
