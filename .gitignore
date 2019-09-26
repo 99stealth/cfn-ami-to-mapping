@@ -8,3 +8,4 @@ env
 __pycache__
 dist/**
 *.egg-info
+.coverage
