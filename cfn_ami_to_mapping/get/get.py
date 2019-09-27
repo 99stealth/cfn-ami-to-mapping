@@ -73,15 +73,3 @@ class Get:
             print('Unexpected error: {}'.format(e))
         except ParamValidationError as e:
             print('Parameter validation error: {}'.format(e))
-
-    def images_ids_from_info(self, images_info):
-        ''' Function receives full images data and returns only images ids '''
-
-        images_ids = [ images['ImageId'] for images in images_info ]
-        return images_ids
-
-    def images_names_from_info(self, images_info):
-        ''' Function receives full images data and returns only images names '''
-
-        images_names = [ images['Name'] for images in images_info ]
-        return images_names
