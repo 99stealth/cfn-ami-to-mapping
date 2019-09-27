@@ -69,7 +69,7 @@ def main():
         initial_images_map_with_image_id = {}
         i = 0
         for top_level_key in args.top_level_key:
-            initial_images_map_with_image_id[top_level_key] = {"image_id": args.image_id[iter]}
+            initial_images_map_with_image_id[top_level_key] = {"image_id": args.image_id[i]}
             i = i + 1
         images_ids = cfn_ami_to_mapping_get.images_ids_from_init_id_map(initial_images_map_with_image_id)
         full_images_info = cfn_ami_to_mapping_get.images_info_by_id(client, images_ids, args.quiet)
@@ -80,7 +80,7 @@ def main():
         initial_images_map_with_image_name = {}
         i = 0
         for top_level_key in args.top_level_key:
-            initial_images_map_with_image_name[top_level_key] = {"image_name": args.image_name[iter]}
+            initial_images_map_with_image_name[top_level_key] = {"image_name": args.image_name[i]}
             i = i + 1
         images_names = cfn_ami_to_mapping_get.images_names_from_init_name_map(initial_images_map_with_image_name)
         full_images_info = cfn_ami_to_mapping_get.images_info_by_name(client, images_names, args.quiet)
