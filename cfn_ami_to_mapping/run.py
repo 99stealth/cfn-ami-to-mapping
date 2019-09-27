@@ -5,12 +5,15 @@ from cfn_ami_to_mapping import Enrich
 from cfn_ami_to_mapping import Generate
 from cfn_ami_to_mapping import Transform
 
+
 def parse_arguments():
     ''' Function allows to parse arguments from the line input and check if all
     of them are entered correctly '''
 
-    parser = argparse.ArgumentParser(description='Create mapping for CloudFormation with AMIs by region',
-                                    epilog='')
+    parser = argparse.ArgumentParser(
+        description='Create mapping for CloudFormation with AMIs by region',
+        epilog=''
+    )
     output_format_group = parser.add_mutually_exclusive_group(required=False)
     output_format_group.add_argument('-j', '--json', action="store_true")
     output_format_group.add_argument('-y', '--yaml', action="store_true", default=True)
@@ -34,7 +37,6 @@ def parse_arguments():
     elif not args.aws_access_key_id and args.aws_secret_access_key:
         parser.error("Parameter --aws-secret-access-key requires --aws-access-key-id")
 
-
     if args.image_id:
         if len(args.image_id) != len(args.top_level_key):
             parser.error("Number of -i/--image-id should be equal to number of -k/--top-level-key")
@@ -43,6 +45,7 @@ def parse_arguments():
             parser.error("Number of -n/--image-name should be equal to number of -k/--top-level-key")
 
     return args
+
 
 def main():
     ''' Main fucntion provides communication between all other functions '''
@@ -60,7 +63,7 @@ def main():
         if not images_are_valid:
             print("[-] Invalid image id {}".format(incorrect_image_id))
             exit(1)
-        initial_images_map_with_image_id = {}
+        initial_images_map_with_image_id = { }
         iter = 0
         for top_level_key in args.top_level_key:
             initial_images_map_with_image_id[top_level_key] = { "image_id": args.image_id[iter] }
