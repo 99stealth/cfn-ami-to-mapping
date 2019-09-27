@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.1] - 2019-09-27
+### Added
+Unit tests for methods:
+- Enrich.images_info_with_id
+- Enrich.images_info_with_name
+- Get.images_names_from_init_name_map
+- Get.images_ids_from_init_id_map
+- Transform.dictionary_to_json
+- Transform.dictionary_to_yaml
+- Validate.images_ids
+### Removed
+Methdos `images_ids_from_info` and `images_names_from_info` since they were not in use
+
 ## [0.6.0] - 2019-09-26
 ### Added
 - `setup.py` in order to create packages
