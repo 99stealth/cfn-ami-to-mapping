@@ -17,7 +17,7 @@ class TestGet(unittest.TestCase):
 
     def test_images_names_from_init_name_map_with_one_image(self):
         test_data = {'AMIID': {'image_name': 'amzn-ami-hvm-2018.03.0.20190611-x86_64-gp2'}}
-        self.assertListEqual(self.get.images_names_from_init_id_map(test_data), ['amzn-ami-hvm-2018.03.0.20190611-x86_64-gp2'])
+        self.assertListEqual(self.get.images_names_from_init_name_map(test_data), ['amzn-ami-hvm-2018.03.0.20190611-x86_64-gp2'])
 
     def test_images_names_from_init_name_map_with_two_image(self):
         test_data = {'AMIID': {'image_name': 'amzn-ami-hvm-2018.03.0.20190611-x86_64-gp2'}, 'AMIID2': {'image_name': 'amzn2-ami-hvm-2.0.20190618-x86_64-gp2'}}
