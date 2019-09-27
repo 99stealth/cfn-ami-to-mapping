@@ -1,3 +1,4 @@
+import sys
 import argparse
 from cfn_ami_to_mapping import Get
 from cfn_ami_to_mapping import Validate
@@ -26,12 +27,14 @@ def parse_arguments():
     parser.add_argument('-k', '--top-level-key', action='append', required=True)
     parser.add_argument('-r', '--region', action='store', default='us-east-1')
     parser.add_argument('-q', '--quiet', action='store_true', default=False)
-    parser.add_argument('--version', action='version', version='%(prog)s {version}'.format(version='0.6.1'))
+    parser.add_argument('--version', action='version',
+                        version='%(prog)s {version}'.format(version='0.6.1'))
 
     args = parser.parse_args()
 
     if args.aws_access_key_id and args.aws_secret_access_key and not args.quiet:
-        print("[!] You have provided your aws_access_key_id and aws_secret_access_key inline which is insecure. Use \033[1maws configure\033[0m command to configure your ")
+        print("""[!] You have provided your aws_access_key_id and aws_secret_access_key inline which is insecure.
+        Use \033[1maws configure\033[0m command to configure your""")
     elif args.aws_access_key_id and not args.aws_secret_access_key:
         parser.error("Parameter --aws-access-key-id requires --aws-secret-access-key")
     elif not args.aws_access_key_id and args.aws_secret_access_key:
@@ -62,25 +65,35 @@ def main():
         images_are_valid, incorrect_image_id = cfn_ami_to_mapping_validate.images_ids(args.image_id)
         if not images_are_valid:
             print("[-] Invalid image id {}".format(incorrect_image_id))
-            exit(1)
-        initial_images_map_with_image_id = { }
-        iter = 0
+            sys.exit(1)
+        initial_images_map_with_image_id = {}
+        i = 0
         for top_level_key in args.top_level_key:
-            initial_images_map_with_image_id[top_level_key] = { "image_id": args.image_id[iter] }
-            iter = iter + 1
+            initial_images_map_with_image_id[top_level_key] = {"image_id": args.image_id[iter]}
+            i = i + 1
         images_ids = cfn_ami_to_mapping_get.images_ids_from_init_id_map(initial_images_map_with_image_id)
         full_images_info = cfn_ami_to_mapping_get.images_info_by_id(client, images_ids, args.quiet)
-        initial_images_map = cfn_ami_to_mapping_enrich.images_info_with_name(full_images_info, initial_images_map_with_image_id)
+        initial_images_map = cfn_ami_to_mapping_enrich.images_info_with_name(full_images_info,
+                                                                             initial_images_map_with_image_id
+                                                                            )
     elif args.image_name:
         initial_images_map_with_image_name = {}
-        iter = 0
+        i = 0
         for top_level_key in args.top_level_key:
-            initial_images_map_with_image_name[top_level_key] = { "image_name": args.image_name[iter] }
-            iter = iter + 1
+            initial_images_map_with_image_name[top_level_key] = {"image_name": args.image_name[iter]}
+            i = i + 1
         images_names = cfn_ami_to_mapping_get.images_names_from_init_name_map(initial_images_map_with_image_name)
         full_images_info = cfn_ami_to_mapping_get.images_info_by_name(client, images_names, args.quiet)
-        initial_images_map = cfn_ami_to_mapping_enrich.images_info_with_id(full_images_info, initial_images_map_with_image_name)
-    images_map = cfn_ami_to_mapping_generate.cfn_ami_mapping_section(initial_images_map, aws_regions, args.map_name, args.quiet, args.aws_access_key_id, args.aws_secret_access_key)
+        initial_images_map = cfn_ami_to_mapping_enrich.images_info_with_id(full_images_info,
+                                                                           initial_images_map_with_image_name
+                                                                          )
+    images_map = cfn_ami_to_mapping_generate.cfn_ami_mapping_section(initial_images_map,
+                                                                     aws_regions,
+                                                                     args.map_name,
+                                                                     args.quiet,
+                                                                     args.aws_access_key_id,
+                                                                     args.aws_secret_access_key
+                                                                    )
     if args.json:
         print(cfn_ami_to_mapping_transform.dictionary_to_json(images_map))
     elif args.yaml:
@@ -89,6 +102,6 @@ def main():
 if __name__ == '__main__':
     try:
         main()
-    except (KeyboardInterrupt):
+    except KeyboardInterrupt:
         print("[-] Processing has been stopped. Interrupted by user")
-        exit(1)
+        sys.exit(1)
