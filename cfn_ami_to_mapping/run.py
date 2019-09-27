@@ -75,7 +75,7 @@ def main():
         full_images_info = cfn_ami_to_mapping_get.images_info_by_id(client, images_ids, args.quiet)
         initial_images_map = cfn_ami_to_mapping_enrich.images_info_with_name(full_images_info,
                                                                              initial_images_map_with_image_id
-                                                                            )
+                                                                             )
     elif args.image_name:
         initial_images_map_with_image_name = {}
         i = 0
@@ -86,18 +86,19 @@ def main():
         full_images_info = cfn_ami_to_mapping_get.images_info_by_name(client, images_names, args.quiet)
         initial_images_map = cfn_ami_to_mapping_enrich.images_info_with_id(full_images_info,
                                                                            initial_images_map_with_image_name
-                                                                          )
+                                                                           )
     images_map = cfn_ami_to_mapping_generate.cfn_ami_mapping_section(initial_images_map,
                                                                      aws_regions,
                                                                      args.map_name,
                                                                      args.quiet,
                                                                      args.aws_access_key_id,
                                                                      args.aws_secret_access_key
-                                                                    )
+                                                                     )
     if args.json:
         print(cfn_ami_to_mapping_transform.dictionary_to_json(images_map))
     elif args.yaml:
         print(cfn_ami_to_mapping_transform.dictionary_to_yaml(images_map))
+
 
 if __name__ == '__main__':
     try:
