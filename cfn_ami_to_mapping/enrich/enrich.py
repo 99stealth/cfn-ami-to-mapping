@@ -9,7 +9,6 @@ class Enrich:
                     initial_images_map_with_image_name[image_map]['image_id'] = image_info['ImageId']
         return initial_images_map_with_image_name
 
-
     def images_info_with_name(self, full_images_info, initial_images_map_with_image_id):
         ''' Function enriches image info by its name and returns a result back '''
 
