@@ -1,6 +1,7 @@
 import unittest
 from cfn_ami_to_mapping import Transform
 
+
 class TestTransform(unittest.TestCase):
     def setUp(self):
         self.transformation = Transform()
