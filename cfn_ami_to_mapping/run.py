@@ -11,6 +11,7 @@ def parse_arguments():
     ''' Function allows to parse arguments from the line input and check if all
     of them are entered correctly '''
 
+    cfn_ami_to_mapping_validate = Validate()
     parser = argparse.ArgumentParser(
         description='Create mapping for CloudFormation with AMIs by region',
         epilog=''
@@ -31,13 +32,21 @@ def parse_arguments():
     parser.add_argument('-q', '--quiet', action='store_true', default=False,
                         help='Quiet mode, doesn\'t show detailed output (default: False)')
     parser.add_argument('--version', action='version',
-                        version='%(prog)s {version}'.format(version='0.6.3'))
+                        version='%(prog)s {version}'.format(version='0.6.4'))
 
     args = parser.parse_args()
 
-    if args.aws_access_key_id and args.aws_secret_access_key and not args.quiet:
-        print('''[!] You have provided your aws_access_key_id and aws_secret_access_key inline which is insecure.
-        Use \033[1maws configure\033[0m command to configure your''')
+    if args.aws_access_key_id and args.aws_secret_access_key:
+        if not args.quiet:
+            print('''[!] You have provided your aws_access_key_id and aws_secret_access_key inline which is insecure.
+                  Use \033[1maws configure\033[0m command to configure your''')
+        if not cfn_ami_to_mapping_validate.aws_access_key_id(args.aws_access_key_id):
+            print('[-] Provided AWS Access Key ID is not valid')
+            sys.exit(1)
+        elif not cfn_ami_to_mapping_validate.aws_secret_access_key(args.aws_secret_access_key):
+            print('[-] Provided AWS Access Secret Key is not valid')
+            sys.exit(1)
+
     elif args.aws_access_key_id and not args.aws_secret_access_key:
         parser.error('Parameter --aws-access-key-id requires --aws-secret-access-key')
     elif not args.aws_access_key_id and args.aws_secret_access_key:
