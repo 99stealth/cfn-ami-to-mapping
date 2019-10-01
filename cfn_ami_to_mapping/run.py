@@ -32,7 +32,7 @@ def parse_arguments():
     parser.add_argument('-q', '--quiet', action='store_true', default=False,
                         help='Quiet mode, doesn\'t show detailed output (default: False)')
     parser.add_argument('--version', action='version',
-                        version='%(prog)s {version}'.format(version='0.6.3'))
+                        version='%(prog)s {version}'.format(version='0.6.4'))
 
     args = parser.parse_args()
 
