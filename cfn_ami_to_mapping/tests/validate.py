@@ -1,6 +1,7 @@
 import unittest
 from cfn_ami_to_mapping import Validate
 
+
 class TestValidation(unittest.TestCase):
     def setUp(self):
         self.validation = Validate()
@@ -16,6 +17,7 @@ class TestValidation(unittest.TestCase):
 
     def test_images_ids_with_one_invalid_8_char_image_id(self):
         self.assertEquals(self.validation.images_ids(['ami-0000000z']), (False, 'ami-0000000z'))
+
 
 if __name__ == '__main__':
     unittest.main()
