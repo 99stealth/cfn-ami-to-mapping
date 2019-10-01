@@ -15,7 +15,7 @@ def parse_arguments():
     cfn_ami_to_mapping_validate = Validate()
     parser = argparse.ArgumentParser(
         description='Create mapping for CloudFormation with AMIs by region',
-        epilog=''
+        epilog='Find more at https://github.com/99stealth/cfn-ami-to-mapping'
     )
     output_format_group = parser.add_mutually_exclusive_group(required=False)
     output_format_group.add_argument('-j', '--json', action='store_true',
