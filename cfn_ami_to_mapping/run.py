@@ -5,6 +5,7 @@ from cfn_ami_to_mapping import Validate
 from cfn_ami_to_mapping import Enrich
 from cfn_ami_to_mapping import Generate
 from cfn_ami_to_mapping import Transform
+from cfn_ami_to_mapping._version import __version__
 
 
 def parse_arguments():
@@ -32,7 +33,7 @@ def parse_arguments():
     parser.add_argument('-q', '--quiet', action='store_true', default=False,
                         help='Quiet mode, doesn\'t show detailed output (default: False)')
     parser.add_argument('--version', action='version',
-                        version='%(prog)s {version}'.format(version='0.6.4'))
+                        version='%(prog)s {version}'.format(version=__version__))
 
     args = parser.parse_args()
 
