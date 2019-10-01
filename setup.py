@@ -1,9 +1,8 @@
 from setuptools import setup, find_packages
-from cfn_ami_to_mapping._version import __version__
 
 setup(
     name='cfn-ami-to-mapping',
-    version=__version__,
+    version='0.6.4',
     description='Get AMI IDs per region automatically for your CloudFormation template',
     author='Roman Banakh',
     author_email='banakh.ri@gmail.com',
