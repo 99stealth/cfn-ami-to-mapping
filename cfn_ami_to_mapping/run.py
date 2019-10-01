@@ -16,36 +16,39 @@ def parse_arguments():
         epilog=''
     )
     output_format_group = parser.add_mutually_exclusive_group(required=False)
-    output_format_group.add_argument('-j', '--json', action="store_true")
-    output_format_group.add_argument('-y', '--yaml', action="store_true", default=True)
+    output_format_group.add_argument('-j', '--json', action='store_true',
+                                     help='Sets output format to json. Cannot be used with --yaml')
+    output_format_group.add_argument('-y', '--yaml', action='store_true', default=True,
+                                     help='Sets output format to yaml. Cannot be used with --json')
     ami_identifier_group = parser.add_mutually_exclusive_group(required=True)
-    ami_identifier_group.add_argument('-i', '--image-id', action='append')
-    ami_identifier_group.add_argument('-n', '--image-name', action='append')
-    parser.add_argument('--aws-access-key-id', action='store')
-    parser.add_argument('--aws-secret-access-key', action='store')
-    parser.add_argument('-m', '--map-name', default="AMIRegionMap")
-    parser.add_argument('-k', '--top-level-key', action='append', required=True)
-    parser.add_argument('-r', '--region', action='store', default='us-east-1')
-    parser.add_argument('-q', '--quiet', action='store_true', default=False)
+    ami_identifier_group.add_argument('-i', '--image-id', action='append', help='AWS image id, like i-00000000')
+    ami_identifier_group.add_argument('-n', '--image-name', action='append', help='AWS image name')
+    parser.add_argument('--aws-access-key-id', action='store', help='AWS Access Key ID')
+    parser.add_argument('--aws-secret-access-key', action='store', help='AWS Secret Access Key')
+    parser.add_argument('-m', '--map-name', default='AMIRegionMap', help='Mapping\'s name (default: AMIRegionMap)')
+    parser.add_argument('-k', '--top-level-key', action='append', required=True, help='Top Level Key')
+    parser.add_argument('-r', '--region', action='store', default='us-east-1', help='AWS Region (default: us-east-1)')
+    parser.add_argument('-q', '--quiet', action='store_true', default=False,
+                        help='Quiet mode, doesn\'t show detailed output (default: False)')
     parser.add_argument('--version', action='version',
-                        version='%(prog)s {version}'.format(version='0.6.2'))
+                        version='%(prog)s {version}'.format(version='0.6.3'))
 
     args = parser.parse_args()
 
     if args.aws_access_key_id and args.aws_secret_access_key and not args.quiet:
-        print("""[!] You have provided your aws_access_key_id and aws_secret_access_key inline which is insecure.
-        Use \033[1maws configure\033[0m command to configure your""")
+        print('''[!] You have provided your aws_access_key_id and aws_secret_access_key inline which is insecure.
+        Use \033[1maws configure\033[0m command to configure your''')
     elif args.aws_access_key_id and not args.aws_secret_access_key:
-        parser.error("Parameter --aws-access-key-id requires --aws-secret-access-key")
+        parser.error('Parameter --aws-access-key-id requires --aws-secret-access-key')
     elif not args.aws_access_key_id and args.aws_secret_access_key:
-        parser.error("Parameter --aws-secret-access-key requires --aws-access-key-id")
+        parser.error('Parameter --aws-secret-access-key requires --aws-access-key-id')
 
     if args.image_id:
         if len(args.image_id) != len(args.top_level_key):
-            parser.error("Number of -i/--image-id should be equal to number of -k/--top-level-key")
+            parser.error('Number of -i/--image-id should be equal to number of -k/--top-level-key')
     elif args.image_name:
         if len(args.image_name) != len(args.top_level_key):
-            parser.error("Number of -n/--image-name should be equal to number of -k/--top-level-key")
+            parser.error('Number of -n/--image-name should be equal to number of -k/--top-level-key')
 
     return args
 
