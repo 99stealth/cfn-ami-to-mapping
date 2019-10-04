@@ -25,6 +25,11 @@ def parse_arguments():
     ami_identifier_group = parser.add_mutually_exclusive_group(required=True)
     ami_identifier_group.add_argument('-i', '--image-id', action='append', help='AWS image id, like i-00000000')
     ami_identifier_group.add_argument('-n', '--image-name', action='append', help='AWS image name')
+    regions = parser.add_mutually_exclusive_group(required=False)
+    regions.add_argument('--aws-regions', action='store', nargs='*',
+                         help='Regions which you want to see in mapping')
+    regions.add_argument('--aws-regions-exclude', action='store', nargs='*',
+                         help='Regions which don\'t you want to see in mapping')
     parser.add_argument('--aws-access-key-id', action='store', help='AWS Access Key ID')
     parser.add_argument('--aws-secret-access-key', action='store', help='AWS Secret Access Key')
     parser.add_argument('-m', '--map-name', default='AMIRegionMap', help='Mapping\'s name (default: AMIRegionMap)')
@@ -74,6 +79,21 @@ def main():
     args = parse_arguments()
     client = cfn_ami_to_mapping_get.aws_client('ec2', args.region, args.aws_access_key_id, args.aws_secret_access_key)
     aws_regions = cfn_ami_to_mapping_get.aws_regions(client)
+    if args.aws_regions:
+        regions_valid, invalid_region = cfn_ami_to_mapping_validate.aws_regions(aws_regions, args.aws_regions)
+        if not regions_valid:
+            print('[-] Invalid region {}'.format(invalid_region))
+            sys.exit(1)
+        else:
+            aws_regions = args.aws_regions
+    elif args.aws_regions_exclude:
+        regions_valid, invalid_region = cfn_ami_to_mapping_validate.aws_regions(aws_regions, args.aws_regions_exclude)
+        if not regions_valid:
+            print('[-] Invalid region {}'.format(invalid_region))
+            sys.exit(1)
+        else:
+            aws_regions = cfn_ami_to_mapping_get.aws_regions_after_exclude(aws_regions, args.aws_regions_exclude)
+
     if args.image_id:
         images_are_valid, incorrect_image_id = cfn_ami_to_mapping_validate.images_ids(args.image_id)
         if not images_are_valid:

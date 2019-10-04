@@ -33,3 +33,9 @@ class Validate:
             return True
         else:
             return False
+
+    def aws_regions(self, aws_regions, regions_provided_by_user):
+        for provided_region in regions_provided_by_user:
+            if provided_region not in aws_regions:
+                return False, provided_region
+        return True, None
