@@ -30,6 +30,26 @@ class TestValidation(unittest.TestCase):
     def test_aws_secret_access_key_with_invalid_value(self):
         self.assertFalse(self.validation.aws_secret_access_key('0ZzzZZzZZz0zZ'))
 
+    def test_aws_regions_with_one_valid_value(self):
+        aws_regions = ['us-east-1', 'us-east-2', 'us-west-1', 'us-west-2']
+        regions_provided_by_user = ['us-east-1']
+        self.assertEquals(self.validation.aws_regions(aws_regions, regions_provided_by_user), (True, None))
+
+    def test_aws_regions_with_one_invalid_value(self):
+        aws_regions = ['us-east-1', 'us-east-2', 'us-west-1', 'us-west-2']
+        regions_provided_by_user = ['eu-east-1']
+        self.assertEquals(self.validation.aws_regions(aws_regions, regions_provided_by_user), (False, 'eu-east-1'))
+
+    def test_aws_regions_with_two_valid_value(self):
+        aws_regions = ['us-east-1', 'us-east-2', 'us-west-1', 'us-west-2']
+        regions_provided_by_user = ['us-east-1', 'us-east-2']
+        self.assertEquals(self.validation.aws_regions(aws_regions, regions_provided_by_user), (True, None))
+
+    def test_aws_regions_with_one_valid_and_one_invalid_value(self):
+        aws_regions = ['us-east-1', 'us-east-2', 'us-west-1', 'us-west-2']
+        regions_provided_by_user = ['us-east-1', 'eu-east-1']
+        self.assertEquals(self.validation.aws_regions(aws_regions, regions_provided_by_user), (False, 'eu-east-1'))
+
 
 if __name__ == '__main__':
     unittest.main()

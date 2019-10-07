@@ -29,6 +29,12 @@ class Get:
         except ParamValidationError as e:
             print('Parameter validation error: {}'.format(e))
 
+    def aws_regions_after_exclude(self, aws_regions, aws_regions_to_exclude):
+        ''' Method provides list of aws regions after eliminating unnecessary ones '''
+        for region in aws_regions_to_exclude:
+            aws_regions.remove(region)
+        return aws_regions
+
     def images_ids_from_init_id_map(self, initial_images_map_with_image_id):
         ''' Function receives initial map and returns all images ids from the
         received map '''
