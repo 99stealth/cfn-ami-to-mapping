@@ -29,6 +29,18 @@ class TestGet(unittest.TestCase):
                              sorted(['amzn-ami-hvm-2018.03.0.20190611-x86_64-gp2',
                                      'amzn2-ami-hvm-2.0.20190618-x86_64-gp2']))
 
+    def test_aws_regions_after_exclude_with_one_value(self):
+        aws_regions = ['us-east-1', 'us-east-2', 'us-west-1', 'us-west-1']
+        exclude_regions = ['us-east-1']
+        expected_output = ['us-east-2', 'us-west-1', 'us-west-1']
+        self.assertListEqual(self.get.aws_regions_after_exclude(aws_regions, exclude_regions), expected_output)
+
+    def test_aws_regions_after_exclude_with_two_values(self):
+        aws_regions = ['us-east-1', 'us-east-2', 'us-west-1', 'us-west-1']
+        exclude_regions = ['us-east-1', 'us-east-2']
+        expected_output = ['us-west-1', 'us-west-1']
+        self.assertListEqual(self.get.aws_regions_after_exclude(aws_regions, exclude_regions), expected_output)
+
 
 if __name__ == '__main__':
     unittest.main()
