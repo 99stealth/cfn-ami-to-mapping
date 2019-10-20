@@ -1,3 +1,5 @@
+import concurrent.futures
+from itertools import repeat
 import boto3
 from botocore.exceptions import ClientError, ParamValidationError
 
@@ -17,6 +19,12 @@ class Get:
             print('Unexpected error: {}'.format(e))
         except ParamValidationError as e:
             print('Parameter validation error: {}'.format(e))
+
+    def aws_clients_in_all_regions(self, aws_regions, aws_access_key_id, aws_secret_access_key):
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            results = executor.map(self.aws_client, repeat('ec2'), aws_regions, repeat(aws_access_key_id), repeat(aws_secret_access_key))
+            clients = [result for result in results]
+        return dict(zip(aws_regions, clients))
 
     def aws_regions(self, client):
         ''' Method provides list of regions which are available for current

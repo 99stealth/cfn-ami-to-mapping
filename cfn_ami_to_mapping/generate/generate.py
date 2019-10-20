@@ -10,6 +10,8 @@ class Generate:
         cfn_ami_to_mapping_get = Get()
         images_map = {}
         images_names = cfn_ami_to_mapping_get.images_names_from_init_name_map(initial_images_map)
+        client_per_region = cfn_ami_to_mapping_get.aws_clients_in_all_regions(aws_regions, aws_access_key_id, aws_secret_access_key)
+        print(client_per_region)
         if not quiet_mode:
             print('[!] Generating mapping for you. Please, wait several seconds.')
         for region in aws_regions:
