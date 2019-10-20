@@ -32,7 +32,7 @@ jobs:
     - name: Unit tests
       run: |
         pip install nose nose-cov
-        nosetests -v --all-modules --with-coverage --cover-package=cfn_ami_to_mapping --ignore-files=multi-threading-get-client.py
+        nosetests -v --all-modules --with-coverage --cover-package=cfn_ami_to_mapping
     - name: Smoke tests
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
