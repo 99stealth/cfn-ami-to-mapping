@@ -4,9 +4,9 @@
 ![GitHub License](https://img.shields.io/github/license/99stealth/cfn-ami-to-mapping)
 ![Commit Activity](https://img.shields.io/github/commit-activity/w/99stealth/cfn-ami-to-mapping)
 
-In most cases people use Mapping section in CloudFormation in order to associate AMI IDs with AWS regions as it described [THIS](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-findinmap.html) example.
+In most cases, people use the Mapping section in CloudFormation in order to associate AMI IDs with AWS regions as described in [THIS](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-findinmap.html) example.
 
-I know how is it annoying to manually searching for AMI IDs in different AWS regions and build that map by your own, especially if your map is bigger than one image per region. That's why this tool had been created.
+I know how is it annoying to manually searching for AMI IDs in different AWS regions and build that map on your own, especially if your map is bigger than one image per region. That's why this tool had been created.
 
 ## How to install
 - Clone this repository
