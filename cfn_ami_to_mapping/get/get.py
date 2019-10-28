@@ -59,9 +59,6 @@ class Get:
 
     def images_info_by_id(self, client, images_ids, quiet_mode):
         ''' Function receives images ids and returns all the related data '''
-
-        if not quiet_mode:
-            print('[!] Getting full info about image(s) {} in {}'.format(' '.join(images_ids), client.meta.region_name))
         try:
             response = client.describe_images(ImageIds=images_ids)
             return response['Images']
@@ -70,11 +67,11 @@ class Get:
         except ParamValidationError as e:
             print('Parameter validation error: {}'.format(e))
 
-    def images_info_by_name(self, client, images_names, quiet_mode):
+    def images_info_by_name(self, client, region, images_names, quiet_mode):
         ''' Function receives images names and returns all the related data '''
 
-        if not quiet_mode:
-            print('[!] Getting full info about image {} in {}'.format(' '.join(images_names), client.meta.region_name))
+        if type(client) is dict:
+            client = client[region]
         try:
             response = client.describe_images(Filters=[
                 {

@@ -116,7 +116,7 @@ def main():
             initial_images_map_with_image_name[top_level_key] = {"image_name": args.image_name[i]}
             i = i + 1
         images_names = cfn_ami_to_mapping_get.images_names_from_init_name_map(initial_images_map_with_image_name)
-        full_images_info = cfn_ami_to_mapping_get.images_info_by_name(client, images_names, args.quiet)
+        full_images_info = cfn_ami_to_mapping_get.images_info_by_name(client, args.region, images_names, args.quiet)
         initial_images_map = cfn_ami_to_mapping_enrich.images_info_with_id(full_images_info,
                                                                            initial_images_map_with_image_name
                                                                            )
