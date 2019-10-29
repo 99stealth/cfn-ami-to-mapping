@@ -1,3 +1,5 @@
+import concurrent.futures
+from itertools import repeat
 import boto3
 from botocore.exceptions import ClientError, ParamValidationError
 
@@ -17,6 +19,12 @@ class Get:
             print('Unexpected error: {}'.format(e))
         except ParamValidationError as e:
             print('Parameter validation error: {}'.format(e))
+
+    def aws_clients_in_all_regions(self, aws_regions, aws_access_key_id, aws_secret_access_key):
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            results = executor.map(self.aws_client, repeat('ec2'), aws_regions, repeat(aws_access_key_id), repeat(aws_secret_access_key))
+            clients = [result for result in results]
+        return dict(zip(aws_regions, clients))
 
     def aws_regions(self, client):
         ''' Method provides list of regions which are available for current
@@ -51,9 +59,6 @@ class Get:
 
     def images_info_by_id(self, client, images_ids, quiet_mode):
         ''' Function receives images ids and returns all the related data '''
-
-        if not quiet_mode:
-            print('[!] Getting full info about image(s) {} in {}'.format(' '.join(images_ids), client.meta.region_name))
         try:
             response = client.describe_images(ImageIds=images_ids)
             return response['Images']
@@ -62,11 +67,11 @@ class Get:
         except ParamValidationError as e:
             print('Parameter validation error: {}'.format(e))
 
-    def images_info_by_name(self, client, images_names, quiet_mode):
+    def images_info_by_name(self, client, region, images_names, quiet_mode):
         ''' Function receives images names and returns all the related data '''
 
-        if not quiet_mode:
-            print('[!] Getting full info about image {} in {}'.format(' '.join(images_names), client.meta.region_name))
+        if type(client) is dict:
+            client = client[region]
         try:
             response = client.describe_images(Filters=[
                 {
