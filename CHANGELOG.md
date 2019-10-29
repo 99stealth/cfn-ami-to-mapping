@@ -19,7 +19,7 @@ Application's speed! Just check it out
 - Added new option which allows set only needed AWS Regions
 - Added new option which allows excluding regions from the full scope
 
-## [0.6.4] - 2019-10-01
+## [0.6.4](https://github.com/99stealth/cfn-ami-to-mapping/tree/v0.6.4) - 2019-10-01
 ### Added
 - Validation for AWS Access Key ID and AWS Secret Access Key
 
