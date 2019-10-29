@@ -8,11 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 Color for a version :)
 ### Fixed
-Speed! Just check it out
+Application's speed! Just check it out
 
 ![Speed fix demo](.media/070vs065.gif)
 ### Removed
-- Notifications about processing since now now user is not waiting for a while.
+- Notifications about processing since now users are not waiting for a while.
 
 ## [0.6.5] - 2019-10-07
 ### Added
