@@ -5,13 +5,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [0.7.0] - 2019-10-31
-## Added
+### Added
 Color for a version :)
-## Fixed
+### Fixed
 Speed! Just check it out
 
 ![Speed fix demo](.media/070vs065.gif)
-## Removed
+### Removed
 - Notifications about processing since now now user is not waiting for a while.
 
 ## [0.6.5] - 2019-10-07
