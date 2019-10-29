@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Color for a version :)
 ## Fixed
 Speed! Just check it out
-![Really fast instruction](.media/070vs065.gif)
+
+![Speed fix demo](.media/070vs065.gif)
 ## Removed
 - Notifications about processing since now now user is not waiting for a while.
 
