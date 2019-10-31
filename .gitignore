@@ -9,4 +9,4 @@ __pycache__
 dist/**
 *.egg-info
 .coverage
-beta/**
+beta/
