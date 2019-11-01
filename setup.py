@@ -25,6 +25,7 @@ setup(
         "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
     ],
     packages=find_packages(exclude=['cfn_ami_to_mapping.helper']),
     include_package_data=True,
