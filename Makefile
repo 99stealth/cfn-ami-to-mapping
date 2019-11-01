@@ -10,11 +10,13 @@ remove:
 update: remove install
 
 build:
-	@echo "Building the package" && echo "✅ Package successfully built" || echo "❌ Something went wrong during the build"
-	@python3 setup.py sdist
+	@python3 setup.py sdist bdist_wheel && echo "Building the package" && echo "✅ Package successfully built" || echo "❌ Something went wrong during the build"
+
+check:
+	@twine check dist/*
 
 clean:
 	@echo "Removing build"
-	@rm -Rf dist/ *.egg-info/ && echo "✅ Build successfully removed" || echo "❌ Something went wrong during the build removal"
+	@rm -Rf dist/ *.egg-info/ build/ &&echo "✅ Build successfully removed" || echo "❌ Something went wrong during the build removal"
 
 rebuild: clean build

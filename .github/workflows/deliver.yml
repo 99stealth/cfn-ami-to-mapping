@@ -1,6 +1,14 @@
 name: main
 
-on: [push]
+on:
+  push:
+    paths-ignore:
+      - '.gitignore'
+      - '**.md'
+      - '**.in'
+      - 'LICENSE'
+    tags:
+      - v*
 
 jobs:
   build:
@@ -40,3 +48,17 @@ jobs:
       run: |
         TEST_DIR='.github/smoke_tests/'
         for test in `ls ${TEST_DIR}`; do bash ${TEST_DIR}/${test}; done
+    - name: Build
+      run: |
+        python setup.py sdist bdist_wheel
+    - name: Check build
+      run: |
+        pip install twine
+        twine check dist/*
+#    - name: Deliver
+#      env: 
+#        TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
+#        TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
+#      run: |
+
+
