@@ -1,4 +1,4 @@
-name: main
+name: General
 
 on:
   push:
@@ -7,8 +7,6 @@ on:
       - '**.md'
       - '**.in'
       - 'LICENSE'
-    tags:
-      - v*
 
 jobs:
   build:
