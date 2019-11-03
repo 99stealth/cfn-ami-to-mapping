@@ -37,7 +37,7 @@ def parse_arguments():
     parser.add_argument('-k', '--top-level-key', action='append', required=True, help='Top Level Key')
     parser.add_argument('-r', '--region', action='store', default='us-east-1', help='AWS Region (default: us-east-1)')
     parser.add_argument('-q', '--quiet', action='store_true', default=False,
-                        help='Quiet mode, doesn\'t show detailed output (default: False)')
+                        help='Quiet mode doesn\'t show detailed output (default: False)')
     parser.add_argument('--version', action='version',
                         version='%(prog)s \033[0;32m{version}\033[0;0m'.format(version=__version__))
 
@@ -70,8 +70,8 @@ def parse_arguments():
 
 
 def main():
-    ''' Main fucntion provides communication between all other functions '''
-    logging.basicConfig(format='')
+    ''' Main function provides communication between all other functions '''
+
     cfn_ami_to_mapping_get = Get()
     cfn_ami_to_mapping_validate = Validate()
     cfn_ami_to_mapping_enrich = Enrich()
