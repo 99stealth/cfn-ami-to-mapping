@@ -1,4 +1,4 @@
-name: General
+name: Build
 
 on:
   push:
@@ -7,13 +7,15 @@ on:
       - '**.md'
       - '**.in'
       - 'LICENSE'
+    tags-ignore:
+      - v*
 
 jobs:
   build:
 
     runs-on: ubuntu-latest
     strategy:
-      max-parallel: 4
+      max-parallel: 5
       matrix:
         python-version: [2.7, 3.5, 3.6, 3.7, 3.8]
 
@@ -45,9 +47,3 @@ jobs:
       run: |
         TEST_DIR='.github/smoke_tests/'
         for test in `ls ${TEST_DIR}`; do bash ${TEST_DIR}/${test}; done
-    - name: Build
-      run: |
-        python setup.py sdist bdist_wheel
-    - name: Check build
-      run: |
-        twine check dist/*
