@@ -11,19 +11,16 @@ on:
       - v*
 
 jobs:
-  build:
-
+  test:
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 5
       matrix:
         python-version: [2.7, 3.5, 3.6, 3.7, 3.8]
-
     steps:
     - uses: actions/checkout@v1
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v1
-
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
@@ -47,9 +44,16 @@ jobs:
       run: |
         TEST_DIR='.github/smoke_tests/'
         for test in `ls ${TEST_DIR}`; do bash ${TEST_DIR}/${test}; done
+  deliver:
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 5
+      matrix:
+        python-version: [2.7, 3.5, 3.6, 3.7, 3.8]
     - name: Build
       run: |
         python setup.py sdist bdist_wheel
     - name: Check build
       run: |
         twine check dist/*
+    - name: Deliver
