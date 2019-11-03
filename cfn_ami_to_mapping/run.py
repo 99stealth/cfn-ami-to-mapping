@@ -1,5 +1,6 @@
 import sys
 import argparse
+import logging
 from cfn_ami_to_mapping import Get
 from cfn_ami_to_mapping import Validate
 from cfn_ami_to_mapping import Enrich
@@ -70,6 +71,7 @@ def parse_arguments():
 
 def main():
     ''' Main function provides communication between all other functions '''
+
     cfn_ami_to_mapping_get = Get()
     cfn_ami_to_mapping_validate = Validate()
     cfn_ami_to_mapping_enrich = Enrich()
