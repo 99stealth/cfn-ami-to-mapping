@@ -4,7 +4,7 @@
 ![GitHub License](https://img.shields.io/github/license/99stealth/cfn-ami-to-mapping)
 ![Commit Activity](https://img.shields.io/github/commit-activity/w/99stealth/cfn-ami-to-mapping)
 
-In most cases, people use the Mapping section in CloudFormation in order to associate AMI IDs with AWS regions as described in [THIS](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-findinmap.html) example.
+In most cases, people use the Mapping section in CloudFormation to associate AMI IDs with AWS regions as described in [THIS](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-findinmap.html) example.
 
 I know how is it annoying to manually searching for AMI IDs in different AWS regions and build that map on your own, especially if your map is bigger than one image per region. That's why this tool had been created.
 
@@ -14,7 +14,7 @@ I know how is it annoying to manually searching for AMI IDs in different AWS reg
 ```
 make install
 ```
-> :warning: It doesn't work perfectly, so please report `Issues` if you faced with any problem during the installation. 
+> :warning: It doesn't work perfectly, so please report `Issues` if you faced any problem during the installation. 
 ## How to use
 
 ### Long story short
@@ -23,14 +23,14 @@ I also know how it's annoying to read all this stuff. So, enjoy watching :eyes:
 
 ### Single image
 #### The scenario
-There is requirement for only one image per region. 
+There is a requirement for only one image per region. 
 
 Ok, all you need to specify it's AMI id and an AWS region where it locates.
 
 ```
 cfn-ami-to-mapping --image-name ami-02f706d959cedf892 --top-level-key AMIID --region us-east-2
 ```
-or instead of AMI id you may specify image name
+or instead of AMI id, you may specify the image name
 ```
 cfn-ami-to-mapping --image-name amzn-ami-hvm-2018.03.0.20190611-x86_64-gp2 --top-level-key AMIID --region us-east-2
 ```
@@ -135,8 +135,8 @@ AMIRegionMap:
 ```
 
 #### :warning: Please, pay attention
-- You may not specify a region in this case it will use default one which is `us-east-1`. Therefore you need to specify AMI ID of image from `us-east-1`.
-- By the default utility creates output using `yaml` format. If you want to change it to `json`, then run the utility with `--json` flag.
+- You may not specify a region, in this case, it will use default one which is `us-east-1`. Therefore you need to specify AMI ID of image from `us-east-1`.
+- By default utility creates output using `yaml` format. If you want to change it to `json`, then run the utility with `--json` flag.
 ```
 cfn-ami-to-mapping --image-id ami-02f706d959cedf892 --top-level-key AMIID --us-east-2 --json
 ```
