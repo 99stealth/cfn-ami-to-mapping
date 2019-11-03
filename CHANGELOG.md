@@ -43,7 +43,7 @@ Unit tests for methods:
 - Transform.dictionary_to_yaml
 - Validate.images_ids
 ### Removed
-Methdos `images_ids_from_info` and `images_names_from_info` since they were not in use
+Methods `images_ids_from_info` and `images_names_from_info` since they were not in use
 
 ## [0.6.0] - 2019-09-26
 ### Added
