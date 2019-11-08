@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Import order
 - Linter
 
-## [0.7.1] - 2019-11-03
+## [0.7.1](https://github.com/99stealth/cfn-ami-to-mapping/tree/v0.7.1) - 2019-11-03
 ## Added
 - Support of Python 3.8
 
