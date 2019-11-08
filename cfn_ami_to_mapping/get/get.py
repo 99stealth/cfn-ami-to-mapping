@@ -1,5 +1,6 @@
 import concurrent.futures
 from itertools import repeat
+
 import boto3
 from botocore.exceptions import ClientError, ParamValidationError
 
@@ -22,7 +23,8 @@ class Get:
 
     def aws_clients_in_all_regions(self, aws_regions, aws_access_key_id, aws_secret_access_key):
         with concurrent.futures.ThreadPoolExecutor() as executor:
-            results = executor.map(self.aws_client, repeat('ec2'), aws_regions, repeat(aws_access_key_id), repeat(aws_secret_access_key))
+            results = executor.map(self.aws_client, repeat('ec2'), aws_regions,
+                                   repeat(aws_access_key_id), repeat(aws_secret_access_key))
             clients = [result for result in results]
         return dict(zip(aws_regions, clients))
 

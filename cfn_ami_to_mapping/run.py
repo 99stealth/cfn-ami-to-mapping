@@ -1,11 +1,8 @@
-import sys
 import argparse
 import logging
-from cfn_ami_to_mapping import Get
-from cfn_ami_to_mapping import Validate
-from cfn_ami_to_mapping import Enrich
-from cfn_ami_to_mapping import Generate
-from cfn_ami_to_mapping import Transform
+import sys
+
+from cfn_ami_to_mapping import Enrich, Generate, Get, Transform, Validate
 from cfn_ami_to_mapping._version import __version__
 
 
