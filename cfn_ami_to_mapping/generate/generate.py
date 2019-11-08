@@ -1,5 +1,6 @@
 import concurrent.futures
 from itertools import repeat
+
 from cfn_ami_to_mapping import Get
 
 
