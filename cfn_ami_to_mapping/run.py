@@ -43,18 +43,7 @@ def parse_arguments():
 
     args = parser.parse_args()
 
-    if args.aws_access_key_id and args.aws_secret_access_key:
-        if not args.quiet:
-            print('''[!] You have provided your aws_access_key_id and aws_secret_access_key inline which is insecure.
-                  Use \033[1maws configure\033[0m command to configure your''')
-        if not cfn_ami_to_mapping_validate.aws_access_key_id(args.aws_access_key_id):
-            print('[-] Provided AWS Access Key ID is not valid')
-            sys.exit(1)
-        elif not cfn_ami_to_mapping_validate.aws_secret_access_key(args.aws_secret_access_key):
-            print('[-] Provided AWS Access Secret Key is not valid')
-            sys.exit(1)
-
-    elif args.aws_access_key_id and not args.aws_secret_access_key:
+    if args.aws_access_key_id and not args.aws_secret_access_key:
         parser.error('Parameter --aws-access-key-id requires --aws-secret-access-key')
     elif not args.aws_access_key_id and args.aws_secret_access_key:
         parser.error('Parameter --aws-secret-access-key requires --aws-access-key-id')
@@ -67,6 +56,20 @@ def parse_arguments():
             parser.error('Number of -n/--image-name should be equal to number of -k/--top-level-key')
 
     return args
+
+
+
+def check_aws_keys(aws_access_key_id, aws_secret_access_key):
+    cfn_ami_to_mapping_validate = Validate()
+    if aws_access_key_id and aws_secret_access_key:
+        logging.warning('You have provided your aws_access_key_id and aws_secret_access_key inline which is insecure. '
+                        'Use \033[1maws configure\033[0m command to configure your')
+        if not cfn_ami_to_mapping_validate.aws_access_key_id(aws_access_key_id):
+            logging.error('Provided AWS Access Key ID is not valid')
+            sys.exit(1)
+        elif not cfn_ami_to_mapping_validate.aws_secret_access_key(aws_secret_access_key):
+            logging.error('Provided AWS Access Secret Key is not valid')
+            sys.exit(1)
 
 
 def main():
