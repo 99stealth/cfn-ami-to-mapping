@@ -10,7 +10,6 @@ def parse_arguments():
     ''' Function allows to parse arguments from the line input and check if all
     of them are entered correctly '''
 
-    cfn_ami_to_mapping_validate = Validate()
     parser = argparse.ArgumentParser(
         description='Create mapping for CloudFormation with AMIs by region',
         epilog='Find more at https://github.com/99stealth/cfn-ami-to-mapping'
@@ -30,9 +29,9 @@ def parse_arguments():
                          help='Regions which don\'t you want to see in mapping')
     logging_intensity = parser.add_mutually_exclusive_group(required=False)
     logging_intensity.add_argument('-q', '--quiet', action='store_true', default=False,
-                                   help='Quiet mode doesn\'t show detailed output (default: False)')
+                                   help='Quiet mode does not show detailed output. (default: False)')
     logging_intensity.add_argument('-v', '--verbose', action='store_true', default=False,
-                                   help='Verbose mode show very detailed output (default: False)')
+                                   help='Verbose mode shows very detailed output (default: False)')
     parser.add_argument('--aws-access-key-id', action='store', help='AWS Access Key ID')
     parser.add_argument('--aws-secret-access-key', action='store', help='AWS Secret Access Key')
     parser.add_argument('-m', '--map-name', default='AMIRegionMap', help='Mapping\'s name (default: AMIRegionMap)')
@@ -43,18 +42,7 @@ def parse_arguments():
 
     args = parser.parse_args()
 
-    if args.aws_access_key_id and args.aws_secret_access_key:
-        if not args.quiet:
-            print('''[!] You have provided your aws_access_key_id and aws_secret_access_key inline which is insecure.
-                  Use \033[1maws configure\033[0m command to configure your''')
-        if not cfn_ami_to_mapping_validate.aws_access_key_id(args.aws_access_key_id):
-            print('[-] Provided AWS Access Key ID is not valid')
-            sys.exit(1)
-        elif not cfn_ami_to_mapping_validate.aws_secret_access_key(args.aws_secret_access_key):
-            print('[-] Provided AWS Access Secret Key is not valid')
-            sys.exit(1)
-
-    elif args.aws_access_key_id and not args.aws_secret_access_key:
+    if args.aws_access_key_id and not args.aws_secret_access_key:
         parser.error('Parameter --aws-access-key-id requires --aws-secret-access-key')
     elif not args.aws_access_key_id and args.aws_secret_access_key:
         parser.error('Parameter --aws-secret-access-key requires --aws-access-key-id')
@@ -69,6 +57,32 @@ def parse_arguments():
     return args
 
 
+def setup_logging(quiet, verbose):
+    if verbose:
+        logging_level = logging.INFO
+    elif quiet:
+        logging_level = logging.ERROR
+    else:
+        logging_level = logging.WARNING
+    logging.addLevelName(logging.INFO, "\033[0;36m%s\033[0;0m" % logging.getLevelName(logging.INFO))
+    logging.addLevelName(logging.WARNING, "\033[0;33m%s\033[0;0m" % logging.getLevelName(logging.WARNING))
+    logging.addLevelName(logging.ERROR, "\033[0;31m%s\033[0;0m" % logging.getLevelName(logging.ERROR))
+    logging.basicConfig(format='[%(levelname)s] %(message)s', level=logging_level)
+
+
+def check_aws_keys(aws_access_key_id, aws_secret_access_key):
+    cfn_ami_to_mapping_validate = Validate()
+    if aws_access_key_id and aws_secret_access_key:
+        logging.warning('You have provided your aws_access_key_id and aws_secret_access_key inline which is insecure. '
+                        'Use \033[1maws configure\033[0m command to configure your')
+        if not cfn_ami_to_mapping_validate.aws_access_key_id(aws_access_key_id):
+            logging.error('Provided AWS Access Key ID is not valid')
+            sys.exit(1)
+        elif not cfn_ami_to_mapping_validate.aws_secret_access_key(aws_secret_access_key):
+            logging.error('Provided AWS Access Secret Key is not valid')
+            sys.exit(1)
+
+
 def main():
     ''' Main function provides communication between all other functions '''
 
@@ -79,19 +93,22 @@ def main():
     cfn_ami_to_mapping_transform = Transform()
 
     args = parse_arguments()
-    client = cfn_ami_to_mapping_get.aws_client('ec2', args.region, args.aws_access_key_id, args.aws_secret_access_key)
+    setup_logging(args.quiet, args.verbose)
+    check_aws_keys(args.aws_access_key_id, args.aws_secret_access_key)
+    client = cfn_ami_to_mapping_get.aws_client('ec2', args.region, args.aws_access_key_id, args.aws_secret_access_key,
+                                               check_client=True)
     aws_regions = cfn_ami_to_mapping_get.aws_regions(client)
     if args.aws_regions:
         regions_valid, invalid_region = cfn_ami_to_mapping_validate.aws_regions(aws_regions, args.aws_regions)
         if not regions_valid:
-            print('[-] Invalid region {}'.format(invalid_region))
+            logging.error('Invalid region {} provided in --aws-regions'.format(invalid_region))
             sys.exit(1)
         else:
             aws_regions = args.aws_regions
     elif args.aws_regions_exclude:
         regions_valid, invalid_region = cfn_ami_to_mapping_validate.aws_regions(aws_regions, args.aws_regions_exclude)
         if not regions_valid:
-            print('[-] Invalid region {}'.format(invalid_region))
+            logging.error('Invalid region {} provided in --aws-regions-exclude'.format(invalid_region))
             sys.exit(1)
         else:
             aws_regions = cfn_ami_to_mapping_get.aws_regions_after_exclude(aws_regions, args.aws_regions_exclude)
@@ -99,7 +116,7 @@ def main():
     if args.image_id:
         images_are_valid, incorrect_image_id = cfn_ami_to_mapping_validate.images_ids(args.image_id)
         if not images_are_valid:
-            print("[-] Invalid image id {}".format(incorrect_image_id))
+            logging.error("Invalid image id {}".format(incorrect_image_id))
             sys.exit(1)
         initial_images_map_with_image_id = {}
         i = 0
@@ -139,5 +156,5 @@ if __name__ == '__main__':
     try:
         main()
     except KeyboardInterrupt:
-        print("[-] Processing has been stopped. Interrupted by user")
+        logging.error("Processing has been stopped. Interrupted by user")
         sys.exit(1)

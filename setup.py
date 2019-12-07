@@ -9,7 +9,7 @@ def readme():
 
 setup(
     name='cfn-ami-to-mapping',
-    version='0.7.2',
+    version='0.8.0',
     description='Get AMI IDs per region automatically for your CloudFormation template',
     long_description=readme(),
     long_description_content_type="text/markdown",
