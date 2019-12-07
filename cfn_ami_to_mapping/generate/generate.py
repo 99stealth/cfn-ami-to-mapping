@@ -1,3 +1,4 @@
+import logging
 import concurrent.futures
 from itertools import repeat
 
@@ -17,7 +18,7 @@ class Generate:
                                                                               aws_access_key_id,
                                                                               aws_secret_access_key)
         if not quiet_mode:
-            print('[!] Generating mapping for you. Please, wait several seconds.')
+            logging.info('Generating mapping for you. Please, wait several seconds.')
         with concurrent.futures.ThreadPoolExecutor() as executor:
             results = executor.map(cfn_ami_to_mapping_get.images_info_by_name,
                                    repeat(client_per_region),

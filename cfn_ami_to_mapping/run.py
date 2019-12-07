@@ -58,6 +58,18 @@ def parse_arguments():
     return args
 
 
+def setup_logging(quiet, verbose):
+    if verbose:
+        logging_level = logging.INFO
+    elif quiet:
+        logging_level = logging.ERROR
+    else:
+        logging_level = logging.WARNING
+    logging.addLevelName(logging.INFO, "\033[0;36m%s\033[0;0m" % logging.getLevelName(logging.INFO))
+    logging.addLevelName(logging.WARNING, "\033[0;33m%s\033[0;0m" % logging.getLevelName(logging.WARNING))
+    logging.addLevelName(logging.ERROR, "\033[0;31m%s\033[0;0m" % logging.getLevelName(logging.ERROR))
+    logging.basicConfig(format='[%(levelname)s] %(message)s', level=logging_level)
+
 
 def check_aws_keys(aws_access_key_id, aws_secret_access_key):
     cfn_ami_to_mapping_validate = Validate()
@@ -82,19 +94,22 @@ def main():
     cfn_ami_to_mapping_transform = Transform()
 
     args = parse_arguments()
-    client = cfn_ami_to_mapping_get.aws_client('ec2', args.region, args.aws_access_key_id, args.aws_secret_access_key)
+    setup_logging(args.quiet, args.verbose)
+    check_aws_keys(args.aws_access_key_id, args.aws_secret_access_key)
+    client = cfn_ami_to_mapping_get.aws_client('ec2', args.region, args.aws_access_key_id, args.aws_secret_access_key,
+                                               check_client=True)
     aws_regions = cfn_ami_to_mapping_get.aws_regions(client)
     if args.aws_regions:
         regions_valid, invalid_region = cfn_ami_to_mapping_validate.aws_regions(aws_regions, args.aws_regions)
         if not regions_valid:
-            print('[-] Invalid region {}'.format(invalid_region))
+            logging.error('Invalid region {} provided in --aws-regions'.format(invalid_region))
             sys.exit(1)
         else:
             aws_regions = args.aws_regions
     elif args.aws_regions_exclude:
         regions_valid, invalid_region = cfn_ami_to_mapping_validate.aws_regions(aws_regions, args.aws_regions_exclude)
         if not regions_valid:
-            print('[-] Invalid region {}'.format(invalid_region))
+            logging.error('Invalid region {} provided in --aws-regions-exclude'.format(invalid_region))
             sys.exit(1)
         else:
             aws_regions = cfn_ami_to_mapping_get.aws_regions_after_exclude(aws_regions, args.aws_regions_exclude)
@@ -102,7 +117,7 @@ def main():
     if args.image_id:
         images_are_valid, incorrect_image_id = cfn_ami_to_mapping_validate.images_ids(args.image_id)
         if not images_are_valid:
-            print("[-] Invalid image id {}".format(incorrect_image_id))
+            logging.error("Invalid image id {}".format(incorrect_image_id))
             sys.exit(1)
         initial_images_map_with_image_id = {}
         i = 0
@@ -142,5 +157,5 @@ if __name__ == '__main__':
     try:
         main()
     except KeyboardInterrupt:
-        print("[-] Processing has been stopped. Interrupted by user")
+        logging.error("Processing has been stopped. Interrupted by user")
         sys.exit(1)

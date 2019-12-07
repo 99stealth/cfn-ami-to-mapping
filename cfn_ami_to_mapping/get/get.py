@@ -17,18 +17,21 @@ class Get:
                                   aws_secret_access_key=aws_secret_access_key)
         else:
             client = boto3.client(resource, region_name=region)
-        try:
-            if client.describe_id_format(Resource='image')['ResponseMetadata']['HTTPStatusCode'] == 200:
-                return client
-        except EndpointConnectionError as e:
-            logging.error('Region {} is unavailable or does not exist. {}'.format(region, e))
-            sys.exit(1)
-        except ClientError as e:
-            logging.error('Unexpected error: {}'.format(e))
-            sys.exit(1)
-        except ParamValidationError as e:
-            logging.error('Parameter validation error: {}'.format(e))
-            sys.exit(1)
+        if check_client:
+            try:
+                if client.describe_id_format(Resource='image')['ResponseMetadata']['HTTPStatusCode'] == 200:
+                    return client
+            except EndpointConnectionError as e:
+                logging.error('Region {} is unavailable or does not exist. {}'.format(region, e))
+                sys.exit(1)
+            except ClientError as e:
+                logging.error('Unexpected error: {}'.format(e))
+                sys.exit(1)
+            except ParamValidationError as e:
+                logging.error('Parameter validation error: {}'.format(e))
+                sys.exit(1)
+        else:
+            return client
 
     def aws_clients_in_all_regions(self, aws_regions, aws_access_key_id, aws_secret_access_key):
         with concurrent.futures.ThreadPoolExecutor() as executor:
@@ -83,6 +86,8 @@ class Get:
 
         if type(client) is dict:
             client = client[region]
+        logging.info('Getting full info about image(s) {} in {}'.format(' '.join(images_names),
+                                                                        client.meta.region_name))
         try:
             response = client.describe_images(Filters=[
                 {
