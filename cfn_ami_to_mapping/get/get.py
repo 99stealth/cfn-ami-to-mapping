@@ -8,7 +8,7 @@ from botocore.exceptions import ClientError, ParamValidationError, EndpointConne
 
 
 class Get:
-    def aws_client(self, resource, region, aws_access_key_id, aws_secret_access_key):
+    def aws_client(self, resource, region, aws_access_key_id, aws_secret_access_key, check_client=False):
         ''' Method provides AWS client for resource in region which were passed
         to the function '''
 
