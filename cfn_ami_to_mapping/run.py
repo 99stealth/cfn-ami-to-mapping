@@ -30,9 +30,9 @@ def parse_arguments():
                          help='Regions which don\'t you want to see in mapping')
     logging_intensity = parser.add_mutually_exclusive_group(required=False)
     logging_intensity.add_argument('-q', '--quiet', action='store_true', default=False,
-                                   help='Quiet mode doesn\'t show detailed output (default: False)')
+                                   help='Quiet mode does not show detailed output. (default: False)')
     logging_intensity.add_argument('-v', '--verbose', action='store_true', default=False,
-                                   help='Verbose mode show very detailed output (default: False)')
+                                   help='Verbose mode shows very detailed output (default: False)')
     parser.add_argument('--aws-access-key-id', action='store', help='AWS Access Key ID')
     parser.add_argument('--aws-secret-access-key', action='store', help='AWS Secret Access Key')
     parser.add_argument('-m', '--map-name', default='AMIRegionMap', help='Mapping\'s name (default: AMIRegionMap)')
