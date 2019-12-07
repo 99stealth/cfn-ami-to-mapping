@@ -48,8 +48,10 @@ class Get:
             return [region['RegionName'] for region in client.describe_regions()['Regions']]
         except ClientError as e:
             logging.error('Unexpected error: {}'.format(e))
+            sys.exit(1)
         except ParamValidationError as e:
             logging.error('Parameter validation error: {}'.format(e))
+            sys.exit(1)
 
     def aws_regions_after_exclude(self, aws_regions, aws_regions_to_exclude):
         ''' Method provides list of aws regions after eliminating unnecessary ones '''
@@ -73,13 +75,17 @@ class Get:
 
     def images_info_by_id(self, client, images_ids, quiet_mode):
         ''' Function receives images ids and returns all the related data '''
+
+        logging.info('Getting full info about image(s) {} in {}'.format(' '.join(images_ids), client.meta.region_name))
         try:
             response = client.describe_images(ImageIds=images_ids)
             return response['Images']
         except ClientError as e:
             logging.error('Unexpected error: {}'.format(e))
+            sys.exit(1)
         except ParamValidationError as e:
             logging.error('Parameter validation error: {}'.format(e))
+            sys.exit(1)
 
     def images_info_by_name(self, client, region, images_names, quiet_mode):
         ''' Function receives images names and returns all the related data '''
@@ -102,5 +108,7 @@ class Get:
             return response['Images']
         except ClientError as e:
             logging.error('Unexpected error: {}'.format(e))
+            sys.exit(1)
         except ParamValidationError as e:
             logging.error('Parameter validation error: {}'.format(e))
+            sys.exit(1)

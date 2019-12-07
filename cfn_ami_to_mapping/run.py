@@ -10,7 +10,6 @@ def parse_arguments():
     ''' Function allows to parse arguments from the line input and check if all
     of them are entered correctly '''
 
-    cfn_ami_to_mapping_validate = Validate()
     parser = argparse.ArgumentParser(
         description='Create mapping for CloudFormation with AMIs by region',
         epilog='Find more at https://github.com/99stealth/cfn-ami-to-mapping'
