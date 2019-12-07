@@ -1,25 +1,37 @@
+import sys
+import logging
 import concurrent.futures
 from itertools import repeat
 
 import boto3
-from botocore.exceptions import ClientError, ParamValidationError
+from botocore.exceptions import ClientError, ParamValidationError, EndpointConnectionError
 
 
 class Get:
-    def aws_client(self, resource, region, aws_access_key_id, aws_secret_access_key):
+    def aws_client(self, resource, region, aws_access_key_id, aws_secret_access_key, check_client=False):
         ''' Method provides AWS client for resource in region which were passed
         to the function '''
 
-        try:
-            if aws_access_key_id and aws_secret_access_key:
-                return boto3.client(resource, region_name=region, aws_access_key_id=aws_access_key_id,
-                                    aws_secret_access_key=aws_secret_access_key)
-            else:
-                return boto3.client(resource, region_name=region)
-        except ClientError as e:
-            print('Unexpected error: {}'.format(e))
-        except ParamValidationError as e:
-            print('Parameter validation error: {}'.format(e))
+        if aws_access_key_id and aws_secret_access_key:
+            client = boto3.client(resource, region_name=region, aws_access_key_id=aws_access_key_id,
+                                  aws_secret_access_key=aws_secret_access_key)
+        else:
+            client = boto3.client(resource, region_name=region)
+        if check_client:
+            try:
+                if client.describe_id_format(Resource='image')['ResponseMetadata']['HTTPStatusCode'] == 200:
+                    return client
+            except EndpointConnectionError as e:
+                logging.error('Region {} is unavailable or does not exist. {}'.format(region, e))
+                sys.exit(1)
+            except ClientError as e:
+                logging.error('Unexpected error: {}'.format(e))
+                sys.exit(1)
+            except ParamValidationError as e:
+                logging.error('Parameter validation error: {}'.format(e))
+                sys.exit(1)
+        else:
+            return client
 
     def aws_clients_in_all_regions(self, aws_regions, aws_access_key_id, aws_secret_access_key):
         with concurrent.futures.ThreadPoolExecutor() as executor:
@@ -35,9 +47,11 @@ class Get:
         try:
             return [region['RegionName'] for region in client.describe_regions()['Regions']]
         except ClientError as e:
-            print('Unexpected error: {}'.format(e))
+            logging.error('Unexpected error: {}'.format(e))
+            sys.exit(1)
         except ParamValidationError as e:
-            print('Parameter validation error: {}'.format(e))
+            logging.error('Parameter validation error: {}'.format(e))
+            sys.exit(1)
 
     def aws_regions_after_exclude(self, aws_regions, aws_regions_to_exclude):
         ''' Method provides list of aws regions after eliminating unnecessary ones '''
@@ -61,19 +75,25 @@ class Get:
 
     def images_info_by_id(self, client, images_ids, quiet_mode):
         ''' Function receives images ids and returns all the related data '''
+
+        logging.info('Getting full info about image(s) {} in {}'.format(' '.join(images_ids), client.meta.region_name))
         try:
             response = client.describe_images(ImageIds=images_ids)
             return response['Images']
         except ClientError as e:
-            print('Unexpected error: {}'.format(e))
+            logging.error('Unexpected error: {}'.format(e))
+            sys.exit(1)
         except ParamValidationError as e:
-            print('Parameter validation error: {}'.format(e))
+            logging.error('Parameter validation error: {}'.format(e))
+            sys.exit(1)
 
     def images_info_by_name(self, client, region, images_names, quiet_mode):
         ''' Function receives images names and returns all the related data '''
 
         if type(client) is dict:
             client = client[region]
+        logging.info('Getting full info about image(s) {} in {}'.format(' '.join(images_names),
+                                                                        client.meta.region_name))
         try:
             response = client.describe_images(Filters=[
                 {
@@ -87,6 +107,8 @@ class Get:
             ],)
             return response['Images']
         except ClientError as e:
-            print('Unexpected error: {}'.format(e))
+            logging.error('Unexpected error: {}'.format(e))
+            sys.exit(1)
         except ParamValidationError as e:
-            print('Parameter validation error: {}'.format(e))
+            logging.error('Parameter validation error: {}'.format(e))
+            sys.exit(1)
