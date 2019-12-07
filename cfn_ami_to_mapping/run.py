@@ -28,13 +28,16 @@ def parse_arguments():
                          help='Regions which you want to see in mapping')
     regions.add_argument('--aws-regions-exclude', action='store', nargs='*',
                          help='Regions which don\'t you want to see in mapping')
+    logging_intensity = parser.add_mutually_exclusive_group(required=False)
+    logging_intensity.add_argument('-q', '--quiet', action='store_true', default=False,
+                                   help='Quiet mode doesn\'t show detailed output (default: False)')
+    logging_intensity.add_argument('-v', '--verbose', action='store_true', default=False,
+                                   help='Verbose mode show very detailed output (default: False)')
     parser.add_argument('--aws-access-key-id', action='store', help='AWS Access Key ID')
     parser.add_argument('--aws-secret-access-key', action='store', help='AWS Secret Access Key')
     parser.add_argument('-m', '--map-name', default='AMIRegionMap', help='Mapping\'s name (default: AMIRegionMap)')
     parser.add_argument('-k', '--top-level-key', action='append', required=True, help='Top Level Key')
     parser.add_argument('-r', '--region', action='store', default='us-east-1', help='AWS Region (default: us-east-1)')
-    parser.add_argument('-q', '--quiet', action='store_true', default=False,
-                        help='Quiet mode doesn\'t show detailed output (default: False)')
     parser.add_argument('--version', action='version',
                         version='%(prog)s \033[0;32m{version}\033[0;0m'.format(version=__version__))
 
