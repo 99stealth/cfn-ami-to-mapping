@@ -58,6 +58,8 @@ def parse_arguments():
 
 
 def setup_logging(quiet, verbose):
+    ''' Function is setting logging configuration '''
+
     if verbose:
         logging_level = logging.INFO
     elif quiet:
@@ -71,6 +73,9 @@ def setup_logging(quiet, verbose):
 
 
 def check_aws_keys(aws_access_key_id, aws_secret_access_key):
+    ''' Function is validating provided AWS Access Key ID and AWS Secret Access Key
+        and warns if credentials are provided inline '''
+
     cfn_ami_to_mapping_validate = Validate()
     if aws_access_key_id and aws_secret_access_key:
         logging.warning('You have provided your aws_access_key_id and aws_secret_access_key inline which is insecure. '
