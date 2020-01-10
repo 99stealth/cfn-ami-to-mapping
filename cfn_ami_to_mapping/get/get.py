@@ -35,6 +35,8 @@ class Get:
             return client
 
     def aws_clients_in_all_regions(self, aws_regions, aws_access_key_id, aws_secret_access_key):
+        ''' Method provides aws clients for all AWS regions '''
+
         with concurrent.futures.ThreadPoolExecutor() as executor:
             results = executor.map(self.aws_client, repeat('ec2'), aws_regions,
                                    repeat(aws_access_key_id), repeat(aws_secret_access_key))
@@ -56,6 +58,7 @@ class Get:
 
     def aws_regions_after_exclude(self, aws_regions, aws_regions_to_exclude):
         ''' Method provides list of aws regions after eliminating unnecessary ones '''
+
         for region in aws_regions_to_exclude:
             aws_regions.remove(region)
         return aws_regions
@@ -74,7 +77,7 @@ class Get:
         return [initial_images_map_with_image_name[top_level_key]['image_name']
                 for top_level_key in initial_images_map_with_image_name]
 
-    def images_info_by_id(self, client, images_ids, quiet_mode):
+    def images_info_by_id(self, client, images_ids):
         ''' Function receives images ids and returns all the related data '''
 
         logging.info('Getting full info about image(s) {} in {}'.format(' '.join(images_ids), client.meta.region_name))
@@ -88,7 +91,7 @@ class Get:
             logging.error('Parameter validation error: {}'.format(e))
             sys.exit(1)
 
-    def images_info_by_name(self, client, region, images_names, quiet_mode):
+    def images_info_by_name(self, client, region, images_names):
         ''' Function receives images names and returns all the related data '''
 
         if type(client) is dict:

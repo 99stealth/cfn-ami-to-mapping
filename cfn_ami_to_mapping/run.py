@@ -129,7 +129,7 @@ def main():
             initial_images_map_with_image_id[top_level_key] = {"image_id": args.image_id[i]}
             i = i + 1
         images_ids = cfn_ami_to_mapping_get.images_ids_from_init_id_map(initial_images_map_with_image_id)
-        full_images_info = cfn_ami_to_mapping_get.images_info_by_id(client, images_ids, args.quiet)
+        full_images_info = cfn_ami_to_mapping_get.images_info_by_id(client, images_ids)
         initial_images_map = cfn_ami_to_mapping_enrich.images_info_with_name(full_images_info,
                                                                              initial_images_map_with_image_id
                                                                              )
@@ -140,14 +140,13 @@ def main():
             initial_images_map_with_image_name[top_level_key] = {"image_name": args.image_name[i]}
             i = i + 1
         images_names = cfn_ami_to_mapping_get.images_names_from_init_name_map(initial_images_map_with_image_name)
-        full_images_info = cfn_ami_to_mapping_get.images_info_by_name(client, args.region, images_names, args.quiet)
+        full_images_info = cfn_ami_to_mapping_get.images_info_by_name(client, args.region, images_names)
         initial_images_map = cfn_ami_to_mapping_enrich.images_info_with_id(full_images_info,
                                                                            initial_images_map_with_image_name
                                                                            )
     images_map = cfn_ami_to_mapping_generate.cfn_ami_mapping_section(initial_images_map,
                                                                      aws_regions,
                                                                      args.map_name,
-                                                                     args.quiet,
                                                                      args.aws_access_key_id,
                                                                      args.aws_secret_access_key
                                                                      )
