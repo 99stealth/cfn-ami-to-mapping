@@ -27,7 +27,7 @@ setup(
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
     ],
-    packages=find_packages(exclude=['cfn_ami_to_mapping.helper']),
+    packages=find_packages(exclude=['cfn_ami_to_mapping.helper', 'cfn_ami_to_mapping.tests']),
     include_package_data=True,
     install_requires=['argparse', 'boto3', 'pyjson', 'pyyaml', 'more-itertools', 'futures'],
     entry_points={
