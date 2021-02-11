@@ -37,7 +37,7 @@ There is a requirement for only one image per region.
 Ok, all you need to specify it's AMI id and an AWS region where it locates.
 
 ```
-cfn-ami-to-mapping --image-name ami-02f706d959cedf892 --top-level-key AMIID --region us-east-2
+cfn-ami-to-mapping --image-id ami-02f706d959cedf892 --top-level-key AMIID --region us-east-2
 ```
 or instead of AMI id, you may specify the image name
 ```
