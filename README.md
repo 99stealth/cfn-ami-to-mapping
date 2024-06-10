@@ -28,6 +28,7 @@ make install
 ## How to use
 ### Long story short
 I also know how it's annoying to read all this stuff. So, enjoy watching :eyes:
+
 ![Really fast instruction](.media/long-story-short.gif)
 
 ### Single image
